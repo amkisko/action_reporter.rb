@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'scout_apm'
 
 RSpec.describe ActionReporter::ScoutApmReporter do
   subject { described_class.new }

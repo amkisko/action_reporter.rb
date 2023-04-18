@@ -3,13 +3,20 @@ module ActionReporter
     class_accessor "Sentry"
 
     def notify(error, context: {})
-      self.context(context)
-      Sentry.capture_exception(error)
+      Sentry.with_scope do |temp_scope|
+        temp_scope.set_contexts(transform_context(context))
+
+        if error.is_a?(StandardError)
+          Sentry.capture_exception(error)
+        else
+          Sentry.capture_message(error)
+        end
+      end
     end
 
     def context(args)
       new_context = transform_context(args)
-      Sentry.set_context(args)
+      Sentry.get_current_scope.set_contexts(new_context)
     end
 
     def audited_user=(user)

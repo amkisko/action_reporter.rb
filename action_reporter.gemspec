@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "action_reporter"
-  s.version = "1.0.4"
+  s.version = "1.0.5"
 
   s.license = "MIT"
 

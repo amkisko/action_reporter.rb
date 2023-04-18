@@ -1,3 +1,7 @@
+# 1.0.5
+
+* Fix Sentry reporting and context setting
+
 # 1.0.4
 
 * Move `transform_context` to individual reporter classes

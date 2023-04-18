@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'rails'
 
 RSpec.describe ActionReporter::RailsReporter do
   subject { described_class.new }
