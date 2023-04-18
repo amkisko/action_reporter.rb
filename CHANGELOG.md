@@ -1,3 +1,7 @@
+# 1.1.1
+
+* Update check-in logic
+
 # 1.1.0
 
 * Add reporter check-in method
