@@ -1,3 +1,7 @@
+# 1.0.7
+
+* Moving Sentry context under `context` key
+
 # 1.0.6
 
 * Possible fix for Sentry context setting
