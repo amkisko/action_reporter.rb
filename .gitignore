@@ -20,5 +20,4 @@
 .lh
 
 *.local
-
-action-reporter-*.gem
+*.gem
