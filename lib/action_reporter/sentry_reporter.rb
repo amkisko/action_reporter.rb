@@ -8,13 +8,12 @@ module ActionReporter
     end
 
     def context(args)
-      args.each do |key, value|
-        Sentry.configure_scope { |scope| scope.set_context(key, value) }
-      end
+      new_context = transform_context(args)
+      Sentry.set_context(args)
     end
 
-    def reset_context
-      Sentry.configure_scope { |scope| scope.clear_breadcrumbs }
+    def audited_user=(user)
+      Sentry.set_user(global_id: user.to_global_id.to_s) if user
     end
   end
 end

@@ -30,35 +30,37 @@ module ActionReporter
 
   def notify(error, context: {})
     enabled_reporters.each do |reporter|
-      new_context =
-        reporter.transform_context? ? transform_context(context) : context
-      reporter.notify(error, context: new_context)
+      next unless reporter.respond_to?(:notify)
+
+      reporter.notify(error, context: context)
     end
   end
 
   def context(args)
     enabled_reporters.each do |reporter|
-      new_args = reporter.transform_context? ? transform_context(args) : args
-      reporter.context(new_args)
+      next unless reporter.respond_to?(:context)
+
+      reporter.context(args)
     end
   end
 
   def reset_context
-    enabled_reporters.each(&:reset_context)
+    enabled_reporters.each do |reporter|
+      next unless reporter.respond_to?(:reset_context)
+
+      reporter.reset_context
+    end
   end
 
   def audited_user
     enabled_reporters.find { |r| r.respond_to?(:audited_user) }&.audited_user
   end
 
-  def transform_context(context)
-    filtered_context = context.reject { |k, _| k == :audited_user }
-    ActionReporter::Utils.deep_transform_values(filtered_context) do |value|
-      if value.respond_to?(:to_global_id)
-        value.to_global_id.to_s
-      else
-        value
-      end
+  def audited_user=(user)
+    enabled_reporters.each do |reporter|
+      next unless reporter.respond_to?(:audited_user=)
+
+      reporter.audited_user = user
     end
   end
 end

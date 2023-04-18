@@ -3,11 +3,13 @@ module ActionReporter
     class_accessor "Honeybadger"
 
     def notify(error, context: {})
-      Honeybadger.notify(error, context: context)
+      new_context = transform_context(context)
+      Honeybadger.notify(error, context: new_context)
     end
 
     def context(args)
-      Honeybadger.context(args)
+      new_context = transform_context(args)
+      Honeybadger.context(new_context)
     end
 
     def reset_context

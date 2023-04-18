@@ -3,16 +3,15 @@ module ActionReporter
     class_accessor "Rails"
 
     def notify(error, context: {})
+      new_context = transform_context(context)
       Rails.logger.info(
-        "Reporter notification: #{error.inspect}, #{context.inspect}"
+        "Reporter notification: #{error.inspect}, #{new_context.inspect}"
       )
     end
 
     def context(args)
-      Rails.logger.info("Reporter context: #{args.inspect}")
-    end
-
-    def reset_context
+      new_context = transform_context(args)
+      Rails.logger.info("Reporter context: #{new_context.inspect}")
     end
   end
 end

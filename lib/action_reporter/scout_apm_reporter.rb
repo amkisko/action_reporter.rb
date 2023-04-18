@@ -9,7 +9,8 @@ module ActionReporter
     end
 
     def context(args)
-      ScoutApmContext.add(args)
+      new_context = transform_context(args)
+      ScoutApmContext.add(new_context)
     end
   end
 end

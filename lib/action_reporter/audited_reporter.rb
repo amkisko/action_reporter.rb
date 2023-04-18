@@ -2,19 +2,12 @@ module ActionReporter
   class AuditedReporter < Base
     class_accessor "Audited"
 
-    def transform_context?
-      false
-    end
-
     def notify(*)
     end
 
     def context(args)
       Audited.store[:current_remote_address] = args[:remote_addr] if args[
         :remote_addr
-      ].present?
-      Audited.store[:audited_user] = args[:audited_user] if args[
-        :audited_user
       ].present?
     end
 
@@ -25,6 +18,10 @@ module ActionReporter
 
     def audited_user
       Audited.store[:audited_user]
+    end
+
+    def audited_user=(user)
+      Audited.store[:audited_user] = user
     end
   end
 end

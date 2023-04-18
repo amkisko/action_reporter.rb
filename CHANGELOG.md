@@ -1,3 +1,7 @@
+# 1.0.4
+
+* Move `transform_context` to individual reporter classes
+
 # 1.0.3
 
 * Fix scoutapm notice method

@@ -25,4 +25,29 @@ RSpec.describe ActionReporter::RailsReporter do
       subject.context({ foo: 'bar' })
     end
   end
+
+  describe '#transform_context' do
+    subject(:transform_context) { described_class.new.transform_context(context) }
+    let(:context) { { foo: 'bar' } }
+
+    it 'returns context' do
+      expect(subject).to eq(context)
+    end
+
+    context 'when context contains audited_user' do
+      let(:context) { { foo: 'bar', audited_user: 'user' } }
+
+      it 'returns context without audited_user' do
+        expect(subject).to eq({ audited_user: 'user', foo: 'bar' })
+      end
+    end
+
+    context 'when context contains ActiveRecord object' do
+      let(:context) { { foo: 'bar', user: user } }
+      let(:user) { double('User', to_global_id: 'gid://user/1') }
+      it 'returns context with global id' do
+        expect(subject).to eq({ foo: 'bar', user: 'gid://user/1' })
+      end
+    end
+  end
 end
