@@ -37,11 +37,11 @@ Put this in your `config/initializers/action_reporter.rb` file:
 
 ```ruby
 ActionReporter.enabled_reporters = [
-  ActionReporter::Reporters::RailsReporter.new,
-  # ActionReporter::Reporters::AuditedReporter.new,
-  # ActionReporter::Reporters::SentryReporter.new,
-  # ActionReporter::Reporters::HoneybadgerReporter.new,
-  # ActionReporter::Reporters::ScoutApmReporter.new
+  ActionReporter::RailsReporter.new,
+  # ActionReporter::AuditedReporter.new,
+  # ActionReporter::SentryReporter.new,
+  # ActionReporter::HoneybadgerReporter.new,
+  # ActionReporter::ScoutApmReporter.new
 ]
 ```
 

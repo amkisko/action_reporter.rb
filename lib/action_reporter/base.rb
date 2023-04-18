@@ -10,5 +10,14 @@ module ActionReporter
     def transform_context?
       true
     end
+
+    def notify(*)
+    end
+
+    def context(*)
+    end
+
+    def reset_context
+    end
   end
 end
