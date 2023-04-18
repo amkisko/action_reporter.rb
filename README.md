@@ -25,6 +25,33 @@ Using RubyGems:
 gem install action_reporter
 ```
 
+## Gemfile
+
+```ruby
+gem 'action_reporter'
+```
+
+## Usage
+
+Put this in your `config/initializers/action_reporter.rb` file:
+
+```ruby
+ActionReporter.enabled_reporters = [
+  ActionReporter::Reporters::RailsReporter.new,
+  # ActionReporter::Reporters::AuditedReporter.new,
+  # ActionReporter::Reporters::SentryReporter.new,
+  # ActionReporter::Reporters::HoneybadgerReporter.new,
+  # ActionReporter::Reporters::ScoutApmReporter.new
+]
+```
+
+Then you can use it in your code:
+
+```ruby
+ActionReporter.context(audited_user: current_user)
+ActionReporter.notify('Something went wrong', context: { record: record })
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/amkisko/action_reporter
