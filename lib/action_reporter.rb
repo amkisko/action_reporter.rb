@@ -52,7 +52,8 @@ module ActionReporter
   end
 
   def transform_context(context)
-    ActionReporter::Utils.deep_transform_values(context.except(:audited_user)) do |value|
+    filtered_context = context.reject { |k, _| k == :audited_user }
+    ActionReporter::Utils.deep_transform_values(filtered_context) do |value|
       if value.respond_to?(:to_global_id)
         value.to_global_id.to_s
       else

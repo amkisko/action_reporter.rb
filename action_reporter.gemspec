@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "action_reporter"
-  s.version = "1.0.1"
+  s.version = "1.0.2"
 
   s.license = "MIT"
 
@@ -24,6 +24,6 @@ Gem::Specification.new do |s|
   # s.bindir      = "bin"
   # s.executables = ["action_reporter"]
 
-  s.required_ruby_version = ">= 3.2.0"
+  s.required_ruby_version = ">= 1.9.3"
   s.require_path = "lib"
 end
