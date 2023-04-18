@@ -63,4 +63,12 @@ module ActionReporter
       reporter.audited_user = user
     end
   end
+
+  def check_in(identifier)
+    enabled_reporters.each do |reporter|
+      next unless reporter.respond_to?(:check_in)
+
+      reporter.check_in(identifier)
+    end
+  end
 end

@@ -1,3 +1,7 @@
+# 1.1.0
+
+* Add reporter check-in method
+
 # 1.0.7
 
 * Moving Sentry context under `context` key

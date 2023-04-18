@@ -13,5 +13,10 @@ module ActionReporter
       new_context = transform_context(args)
       Rails.logger.info("Reporter context: #{new_context.inspect}")
     end
+
+    def check_in(identifier)
+      check_in_id = resolve_check_in_id(identifier)
+      Rails.logger.info("Reporter check-in: #{check_in_id}")
+    end
   end
 end

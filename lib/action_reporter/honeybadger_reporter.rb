@@ -15,5 +15,10 @@ module ActionReporter
     def reset_context
       Honeybadger.context.clear!
     end
+
+    def check_in(identifier)
+      check_in_id = resolve_check_in_id(identifier)
+      Honeybadger.check_in(check_in_id)
+    end
   end
 end

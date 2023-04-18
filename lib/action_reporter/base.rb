@@ -17,6 +17,16 @@ module ActionReporter
       end
     end
 
+    def resolve_check_in_id(identifier)
+      if identifier.is_a?(String)
+        identifier
+      elsif identifier.respond_to?(:reporter_check_in)
+        identifier.reporter_check_in
+      else
+        raise ArgumentError, "Unknown check-in identifier: #{identifier.inspect}"
+      end
+    end
+
     def notify(*)
     end
 
