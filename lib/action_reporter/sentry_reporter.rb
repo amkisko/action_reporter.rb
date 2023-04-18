@@ -4,7 +4,9 @@ module ActionReporter
 
     def notify(error, context: {})
       Sentry.with_scope do |temp_scope|
-        temp_scope.set_contexts(transform_context(context))
+        transform_context(context).each do |key, value|
+          temp_scope.set_context(key, value)
+        end
 
         if error.is_a?(StandardError)
           Sentry.capture_exception(error)
@@ -15,8 +17,9 @@ module ActionReporter
     end
 
     def context(args)
-      new_context = transform_context(args)
-      Sentry.get_current_scope.set_contexts(new_context)
+      transform_context(args).each do |key, value|
+        Sentry.get_current_scope.set_context(key, value)
+      end
     end
 
     def audited_user=(user)

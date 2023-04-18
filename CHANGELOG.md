@@ -1,3 +1,7 @@
+# 1.0.6
+
+* Possible fix for Sentry context setting
+
 # 1.0.5
 
 * Fix Sentry reporting and context setting
