@@ -1,10 +1,12 @@
 module ActionReporter
   class Base
     def self.class_accessor(class_name)
-      return unless Object.const_defined?(class_name)
+      method_name = class_name.gsub("::", "_").downcase + "_class"
+      define_method(method_name) do
+        raise Error.new("#{class_name} is not defined") unless Object.const_defined?(class_name)
 
-      const_name = class_name.gsub("::", "")
-      const_set(const_name, Object.const_get(class_name))
+        Object.const_get(class_name)
+      end
     end
 
     def transform_context(context)
@@ -23,7 +25,7 @@ module ActionReporter
       elsif identifier.respond_to?(:to_s)
         identifier.to_s
       else
-        raise ArgumentError, "Unknown check-in identifier: #{identifier.inspect}"
+        raise ArgumentError.new("Unknown check-in identifier: #{identifier.inspect}")
       end
     end
 

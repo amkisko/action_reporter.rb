@@ -1,3 +1,9 @@
+# 1.2.0
+
+* Major fixes for class resolvers
+* Implemented ActionReporter::Error class
+* Improved test coverage
+
 # 1.1.1
 
 * Update check-in logic

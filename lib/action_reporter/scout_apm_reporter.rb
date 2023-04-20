@@ -5,12 +5,16 @@ module ActionReporter
 
     def notify(error, context: {})
       self.context(context)
-      ScoutApmError.capture(error)
+      scoutapm_error_class.capture(error)
     end
 
     def context(args)
       new_context = transform_context(args)
-      ScoutApmContext.add(new_context)
+      scoutapm_context_class.add(new_context)
+    end
+
+    def audited_user=(user)
+      scoutapm_context_class.add_user(user_global_id: user&.to_global_id&.to_s)
     end
   end
 end

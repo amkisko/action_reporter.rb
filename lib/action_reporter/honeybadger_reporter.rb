@@ -4,21 +4,25 @@ module ActionReporter
 
     def notify(error, context: {})
       new_context = transform_context(context)
-      Honeybadger.notify(error, context: new_context)
+      honeybadger_class.notify(error, context: new_context)
     end
 
     def context(args)
       new_context = transform_context(args)
-      Honeybadger.context(new_context)
+      honeybadger_class.context(new_context)
     end
 
     def reset_context
-      Honeybadger.context.clear!
+      honeybadger_class.context.clear!
     end
 
     def check_in(identifier)
       check_in_id = resolve_check_in_id(identifier)
-      Honeybadger.check_in(check_in_id)
+      honeybadger_class.check_in(check_in_id)
+    end
+
+    def audited_user=(user)
+      honeybadger_class.context(user_global_id: user.to_global_id.to_s) if user
     end
   end
 end

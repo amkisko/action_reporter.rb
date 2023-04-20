@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rails'
 
 RSpec.describe ActionReporter::RailsReporter do
-  subject { described_class.new }
+  subject(:instance) { described_class.new }
 
   let(:rails_stub) { double('Rails') }
   let(:logger_stub) { double('logger') }

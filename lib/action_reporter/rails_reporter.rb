@@ -4,19 +4,19 @@ module ActionReporter
 
     def notify(error, context: {})
       new_context = transform_context(context)
-      Rails.logger.info(
+      rails_class.logger.info(
         "Reporter notification: #{error.inspect}, #{new_context.inspect}"
       )
     end
 
     def context(args)
       new_context = transform_context(args)
-      Rails.logger.info("Reporter context: #{new_context.inspect}")
+      rails_class.logger.info("Reporter context: #{new_context.inspect}")
     end
 
     def check_in(identifier)
       check_in_id = resolve_check_in_id(identifier)
-      Rails.logger.info("Reporter check-in: #{check_in_id}")
+      rails_class.logger.info("Reporter check-in: #{check_in_id}")
     end
   end
 end
