@@ -1,7 +1,7 @@
 module ActionReporter
   class ScoutApmReporter < Base
-    class_accessor "ScoutApm::Error"
-    class_accessor "ScoutApm::Context"
+    class_accessor "ScoutApm::Error", gem_spec: "scout_apm (~> 5)"
+    class_accessor "ScoutApm::Context", gem_spec: "scout_apm (~> 5)"
 
     def notify(error, context: {})
       self.context(context)

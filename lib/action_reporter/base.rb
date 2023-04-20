@@ -1,11 +1,22 @@
+require_relative 'error'
+
 module ActionReporter
   class Base
-    def self.class_accessor(class_name)
+    def self.class_accessor(class_name, gem_spec: nil)
       method_name = class_name.gsub("::", "_").downcase + "_class"
       define_method(method_name) do
-        raise Error.new("#{class_name} is not defined") unless Object.const_defined?(class_name)
+        raise ActionReporter::Error.new("#{class_name} is not defined") unless Object.const_defined?(class_name)
 
-        Object.const_get(class_name)
+        @@class_cache ||= {}
+        @@class_cache[class_name] ||= begin
+          if gem_spec
+            gem_name, version = gem_spec.scan(/([^(\s]+)\s*(?:\(([^)]+)\))?/).first
+            latest_spec = Gem.loaded_specs[gem_name]
+            version_satisfied = latest_spec && Gem::Requirement.new(version).satisfied_by?(latest_spec.version)
+            raise ActionReporter::Error.new("#{gem_spec} is not loaded") if !version_satisfied
+          end
+          Object.const_get(class_name)
+        end
       end
     end
 

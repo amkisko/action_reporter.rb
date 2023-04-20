@@ -1,6 +1,6 @@
 module ActionReporter
   class AuditedReporter < Base
-    class_accessor "Audited"
+    class_accessor "Audited", gem_spec: "audited (~> 5)"
 
     def notify(*)
     end

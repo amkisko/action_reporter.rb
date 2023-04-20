@@ -1,6 +1,6 @@
 module ActionReporter
   class SentryReporter < Base
-    class_accessor "Sentry"
+    class_accessor "Sentry", gem_spec: "sentry-ruby (~> 5)"
 
     def notify(error, context: {})
       sentry_class.with_scope do |temp_scope|

@@ -1,6 +1,6 @@
 module ActionReporter
   class HoneybadgerReporter < Base
-    class_accessor "Honeybadger"
+    class_accessor "Honeybadger", gem_spec: "honeybadger (~> 5)"
 
     def notify(error, context: {})
       new_context = transform_context(context)

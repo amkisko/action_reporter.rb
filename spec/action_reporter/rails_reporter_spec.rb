@@ -4,11 +4,9 @@ require 'rails'
 RSpec.describe ActionReporter::RailsReporter do
   subject(:instance) { described_class.new }
 
-  let(:rails_stub) { double('Rails') }
-  let(:logger_stub) { double('logger') }
+  let(:logger_stub) { instance_double('Logger') }
   before do
-    stub_const('Rails', rails_stub)
-    allow(rails_stub).to receive(:logger).and_return(logger_stub)
+    Rails.logger = logger_stub
   end
 
   describe '#notify' do
