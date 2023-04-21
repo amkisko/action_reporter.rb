@@ -48,7 +48,8 @@ ActionReporter.enabled_reporters = [
 Then you can use it in your code:
 
 ```ruby
-ActionReporter.context(audited_user: current_user)
+ActionReporter.audited_user = current_user
+ActionReporter.context(entry_id: entry.id)
 ActionReporter.notify('Something went wrong', context: { record: record })
 ```
 
