@@ -1,3 +1,8 @@
+# 1.3.0
+
+* Update ruby version to 3.2.2
+* Update dependencies to latest
+
 # 1.2.0
 
 * Major fixes for class resolvers
