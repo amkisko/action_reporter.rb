@@ -33,7 +33,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'webmock', '~> 3'
   gem.add_development_dependency 'pry-byebug', '~> 3'
 
-  gem.add_runtime_dependency 'rails', '~> 7'
+  gem.add_runtime_dependency 'rails', '> 5'
   gem.add_runtime_dependency 'audited', '~> 5'
   gem.add_runtime_dependency 'honeybadger', '~> 5'
   gem.add_runtime_dependency 'sentry-ruby', '~> 5'
