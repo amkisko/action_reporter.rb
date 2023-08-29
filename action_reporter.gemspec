@@ -1,6 +1,6 @@
 Gem::Specification.new do |gem|
   gem.name = "action_reporter"
-  gem.version = "1.3.0"
+  gem.version = File.read(File.expand_path('../lib/action_reporter.rb', __FILE__)).match(/VERSION\s*=\s*'(.*?)'/)[1]
 
   gem.license = "MIT"
 
