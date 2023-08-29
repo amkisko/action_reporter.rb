@@ -1,6 +1,6 @@
 # action_reporter
 
-[![Gem Version](https://badge.fury.io/rb/action_reporter.svg)](https://badge.fury.io/rb/action_reporter) [![Test Status](https://github.com/amkisko/action_reporter/actions/workflows/test.yml/badge.svg)](https://github.com/amkisko/action_reporter/actions/workflows/test.yml)
+[![Gem Version](https://badge.fury.io/rb/action_reporter.svg)](https://badge.fury.io/rb/action_reporter) [![Test Status](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml/badge.svg)](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml)
 
 Ruby wrapper for multiple reporting services.
 
@@ -55,7 +55,7 @@ ActionReporter.notify('Something went wrong', context: { record: record })
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/amkisko/action_reporter
+Bug reports and pull requests are welcome on GitHub at https://github.com/amkisko/action_reporter.rb
 
 ## Publishing
 
