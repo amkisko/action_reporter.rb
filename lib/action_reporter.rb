@@ -1,4 +1,3 @@
-require 'action_reporter/version'
 require 'action_reporter/utils'
 require 'action_reporter/base'
 require 'action_reporter/rails_reporter'
