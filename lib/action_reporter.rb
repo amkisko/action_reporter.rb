@@ -10,6 +10,8 @@ require 'action_reporter/audited_reporter'
 module ActionReporter
   module_function
 
+  VERSION = '1.3.1'
+
   AVAILABLE_REPORTERS = [
     ActionReporter::RailsReporter,
     ActionReporter::HoneybadgerReporter,

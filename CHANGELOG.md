@@ -1,3 +1,7 @@
+# 1.3.1
+
+* Update gem configuration
+
 # 1.3.0
 
 * Update ruby version to 3.2.2
