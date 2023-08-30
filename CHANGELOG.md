@@ -1,3 +1,7 @@
+# 1.4.0
+
+* Set minimum ruby version requirement to 2.5.0
+
 # 1.3.1
 
 * Update gem configuration

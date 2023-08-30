@@ -26,16 +26,18 @@ Gem::Specification.new do |gem|
   # s.bindir      = "bin"
   # s.executables = ["action_reporter"]
 
-  gem.required_ruby_version = ">= 1.9.3"
+  gem.required_ruby_version = ">= 2.5.0"
   gem.require_path = "lib"
-
-  gem.add_development_dependency 'rspec', '~> 3'
-  gem.add_development_dependency 'webmock', '~> 3'
-  gem.add_development_dependency 'pry-byebug', '~> 3'
 
   gem.add_runtime_dependency 'rails', '> 5'
   gem.add_runtime_dependency 'audited', '~> 5'
   gem.add_runtime_dependency 'honeybadger', '~> 5'
   gem.add_runtime_dependency 'sentry-ruby', '~> 5'
   gem.add_runtime_dependency 'scout_apm', '~> 5'
+
+  gem.add_development_dependency 'rspec', '~> 3'
+  gem.add_development_dependency 'webmock', '~> 3'
+  gem.add_development_dependency 'pry', '~> 0.14'
+  gem.add_development_dependency 'simplecov', '~> 0.21'
+  gem.add_development_dependency 'simplecov-cobertura', '~> 2'
 end
