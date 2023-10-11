@@ -40,10 +40,17 @@ RSpec.describe ActionReporter::HoneybadgerReporter do
 
   describe '#reset_context' do
     subject(:reset_context) { instance.reset_context }
+    let(:new_context) { { foo: 'bar' } }
+
+    before do
+      Honeybadger.context(new_context)
+    end
 
     it 'resets context' do
+      expect(Honeybadger.get_context).to eq(new_context)
       expect(Honeybadger.context).to receive(:clear!).and_call_original
       subject
+      expect(Honeybadger.get_context).to eq(nil)
     end
   end
 
