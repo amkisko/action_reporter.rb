@@ -1,6 +1,6 @@
 # action_reporter
 
-[![Gem Version](https://badge.fury.io/rb/action_reporter.svg)](https://badge.fury.io/rb/action_reporter) [![Test Status](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml/badge.svg)](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml)
+[![Gem Version](https://badge.fury.io/rb/action_reporter.svg)](https://badge.fury.io/rb/action_reporter) [![Test Status](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml/badge.svg)](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/amkisko/action_reporter.rb/graph/badge.svg?token=JCV2A7NWTE)](https://codecov.io/gh/amkisko/action_reporter.rb)
 
 Ruby wrapper for multiple reporting services.
 
