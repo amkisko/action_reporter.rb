@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'rails'
-require 'audited'
+require 'paper_trail'
 
-RSpec.describe ActionReporter::AuditedReporter do
+RSpec.describe ActionReporter::PaperTrailReporter do
   subject(:instance) { described_class.new }
 
   describe '#notify' do
@@ -19,9 +19,9 @@ RSpec.describe ActionReporter::AuditedReporter do
     let(:user) { double('User', to_global_id: 'gid://user/1') }
 
     it 'sets audited_user' do
-      expect(Audited.store[:audited_user]).to eq(nil)
+      expect(PaperTrail.request.whodunnit).to eq(nil)
       subject
-      expect(Audited.store[:audited_user]).to eq(user)
+      expect(PaperTrail.request.whodunnit).to eq(user)
     end
   end
 
@@ -29,8 +29,7 @@ RSpec.describe ActionReporter::AuditedReporter do
     subject(:reset_context) { instance.reset_context }
 
     it 'resets context' do
-      expect(Audited.store).to receive(:delete).with(:current_remote_address)
-      expect(Audited.store).to receive(:delete).with(:audited_user)
+      expect(PaperTrail.request).to receive(:whodunnit=).with(nil)
       subject
     end
   end

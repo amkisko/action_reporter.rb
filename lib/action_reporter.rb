@@ -5,18 +5,20 @@ require 'action_reporter/honeybadger_reporter'
 require 'action_reporter/sentry_reporter'
 require 'action_reporter/scout_apm_reporter'
 require 'action_reporter/audited_reporter'
+require 'action_reporter/paper_trail_reporter'
 
 module ActionReporter
   module_function
 
-  VERSION = '1.4.0'.freeze
+  VERSION = '1.4.1'.freeze
 
   AVAILABLE_REPORTERS = [
     ActionReporter::RailsReporter,
     ActionReporter::HoneybadgerReporter,
     ActionReporter::SentryReporter,
     ActionReporter::ScoutApmReporter,
-    ActionReporter::AuditedReporter
+    ActionReporter::AuditedReporter,
+    ActionReporter::PaperTrailReporter
   ].freeze
 
   @enabled_reporters = []

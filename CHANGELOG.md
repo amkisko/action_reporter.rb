@@ -1,3 +1,7 @@
+# 1.4.1
+
+* Add paper_trail support
+
 # 1.4.0
 
 * Set minimum ruby version requirement to 2.5.0

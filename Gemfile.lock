@@ -1,12 +1,8 @@
 PATH
   remote: .
   specs:
-    action_reporter (1.4.0)
-      audited (~> 5)
-      honeybadger (~> 5)
+    action_reporter (1.4.1)
       rails (> 5)
-      scout_apm (~> 5)
-      sentry-ruby (~> 5)
 
 GEM
   remote: https://rubygems.org/
@@ -129,6 +125,9 @@ GEM
       racc (~> 1.4)
     nokogiri (1.15.4-x86_64-linux)
       racc (~> 1.4)
+    paper_trail (15.1.0)
+      activerecord (>= 6.1)
+      request_store (~> 1.4)
     parser (3.2.2.3)
       ast (~> 2.4.1)
       racc
@@ -228,8 +227,13 @@ PLATFORMS
 
 DEPENDENCIES
   action_reporter!
+  audited (~> 5)
+  honeybadger (~> 5)
+  paper_trail (~> 15)
   pry (~> 0.14)
   rspec (~> 3)
+  scout_apm (~> 5)
+  sentry-ruby (~> 5)
   simplecov (~> 0.21)
   simplecov-cobertura (~> 2)
   webmock (~> 3)
