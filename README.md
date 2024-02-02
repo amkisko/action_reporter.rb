@@ -7,6 +7,7 @@ Ruby wrapper for multiple reporting services.
 Supported services:
 - Rails logger
 - Audited
+- PaperTrail
 - Sentry
 - Honeybadger
 - scoutapm
@@ -39,6 +40,7 @@ Put this in your `config/initializers/action_reporter.rb` file:
 ActionReporter.enabled_reporters = [
   ActionReporter::RailsReporter.new,
   # ActionReporter::AuditedReporter.new,
+  # ActionReporter::PaperTrailReporter.new,
   # ActionReporter::SentryReporter.new,
   # ActionReporter::HoneybadgerReporter.new,
   # ActionReporter::ScoutApmReporter.new
