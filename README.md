@@ -2,6 +2,8 @@
 
 [![Gem Version](https://badge.fury.io/rb/action_reporter.svg)](https://badge.fury.io/rb/action_reporter) [![Test Status](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml/badge.svg)](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/amkisko/action_reporter.rb/graph/badge.svg?token=JCV2A7NWTE)](https://codecov.io/gh/amkisko/action_reporter.rb)
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f4bef9a52eac43a5a0f6d8c1b58cc6af)](https://app.codacy.com/gh/amkisko/action_reporter.rb/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade) [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/f4bef9a52eac43a5a0f6d8c1b58cc6af)](https://app.codacy.com/gh/amkisko/action_reporter.rb/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
+
 Ruby wrapper for multiple reporting services.
 
 Supported services:
