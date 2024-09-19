@@ -57,6 +57,21 @@ ActionReporter.context(entry_id: entry.id)
 ActionReporter.notify('Something went wrong', context: { record: record })
 ```
 
+## Hook debugger to notify method
+
+Apply patch on initializer level or before running the main code:
+
+```ruby
+module ActionReporter
+  class RailsReporter < Base
+    def notify(error, context: {})
+      super
+      binding.pry
+    end
+  end
+end
+```
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/amkisko/action_reporter.rb
