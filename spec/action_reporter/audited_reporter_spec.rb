@@ -18,10 +18,10 @@ RSpec.describe ActionReporter::AuditedReporter do
 
     let(:user) { double('User', to_global_id: 'gid://user/1') }
 
-    it 'sets current_user' do
-      expect(Audited.store[:current_user]).to eq(nil)
+    it 'sets audited_user' do
+      expect(Audited.store[:audited_user]).to eq(nil)
       subject
-      expect(Audited.store[:current_user]).to eq(user)
+      expect(Audited.store[:audited_user]).to eq(user)
     end
   end
 
@@ -31,7 +31,7 @@ RSpec.describe ActionReporter::AuditedReporter do
     it 'resets context' do
       expect(Audited.store).to receive(:delete).with(:current_remote_address)
       expect(Audited.store).to receive(:delete).with(:current_request_uuid)
-      expect(Audited.store).to receive(:delete).with(:current_user)
+      expect(Audited.store).to receive(:delete).with(:audited_user)
       subject
     end
   end

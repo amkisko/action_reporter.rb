@@ -11,15 +11,15 @@ module ActionReporter
     def reset_context
       Audited.store.delete(:current_remote_address)
       Audited.store.delete(:current_request_uuid)
-      Audited.store.delete(:current_user)
+      Audited.store.delete(:audited_user)
     end
 
     def current_user
-      Audited.store[:current_user]
+      Audited.store[:audited_user]
     end
 
     def current_user=(user)
-      Audited.store[:current_user] = user
+      Audited.store[:audited_user] = user
     end
 
     def current_request_uuid

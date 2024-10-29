@@ -1,3 +1,7 @@
+# 1.5.1
+
+* Fix Audited current user setter to use `audited_user`
+
 # 1.5.0
 
 * BREAKING: Rename `audited_user` to `current_user`
