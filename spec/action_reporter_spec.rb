@@ -34,7 +34,7 @@ RSpec.describe ActionReporter do
   describe ".reset_context" do
   end
 
-  describe ".audited_user" do
+  describe ".current_user" do
     context "when AuditedReporter is enabled" do
       let(:audited_reporter) { ActionReporter::AuditedReporter.new }
       let(:audited_stub) { double("Audited") }
@@ -42,12 +42,14 @@ RSpec.describe ActionReporter do
         described_class.enabled_reporters = [
           audited_reporter
         ]
-        allow(audited_stub).to receive(:store).and_return({audited_user: "user"})
+        allow(audited_stub).to receive(:store).and_return({current_user: "user"})
         stub_const("Audited", audited_stub)
       end
+      let(:new_user) { double("User", to_global_id: "gid://user/1") }
 
-      it "returns audited_user" do
-        expect(described_class.audited_user).to eq("user")
+      it "returns current_user" do
+        expect { described_class.current_user = new_user }.not_to raise_error
+        expect(described_class.current_user).to eq(new_user)
       end
     end
   end

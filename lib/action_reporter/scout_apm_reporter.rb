@@ -13,8 +13,12 @@ module ActionReporter
       scoutapm_context_class.add(new_context)
     end
 
-    def audited_user=(user)
+    def current_user=(user)
       scoutapm_context_class.add_user(user_global_id: user&.to_global_id&.to_s)
+    end
+
+    def ignore_transaction!
+      scoutapm_context_class.ignore_transaction!
     end
   end
 end

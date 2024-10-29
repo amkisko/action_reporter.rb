@@ -58,8 +58,8 @@ RSpec.describe ActionReporter::SentryReporter do
     end
   end
 
-  describe '#audited_user=' do
-    subject(:audited_user=) { instance.audited_user = user }
+  describe '#current_user=' do
+    subject(:current_user=) { instance.current_user = user }
 
     let(:sample_id) { double("GlobalId", to_s: "user-global-id") }
     let(:user) { double("User", to_global_id: sample_id) }

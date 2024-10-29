@@ -1,3 +1,9 @@
+# 1.5.0
+
+* BREAKING: Rename `audited_user` to `current_user`
+* Add `current_request_uuid` and `current_remote_addr` getters and setters
+* Memoize `current_user`, `current_request_uuid`, and `current_remote_addr`
+
 # 1.4.1
 
 * Add paper_trail support

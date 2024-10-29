@@ -41,12 +41,12 @@ RSpec.describe ActionReporter::ScoutApmReporter do
 
   end
 
-  describe '#audited_user=' do
-    subject(:audited_user=) { instance.audited_user = user }
+  describe '#current_user=' do
+    subject(:current_user=) { instance.current_user = user }
 
     let(:user) { double('User', to_global_id: 'gid://user/1') }
 
-    it 'sets audited_user' do
+    it 'sets current_user' do
       expect(ScoutApm::Context).to receive(:add_user).with({ user_global_id: user.to_global_id }).and_call_original
       subject
     end

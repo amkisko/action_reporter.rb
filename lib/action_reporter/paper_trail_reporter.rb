@@ -12,11 +12,11 @@ module ActionReporter
       PaperTrail.request.whodunnit = nil
     end
 
-    def audited_user
+    def current_user
       PaperTrail.request.whodunnit
     end
 
-    def audited_user=(user)
+    def current_user=(user)
       PaperTrail.request.whodunnit = user
     end
   end
