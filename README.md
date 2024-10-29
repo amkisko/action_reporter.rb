@@ -52,7 +52,9 @@ ActionReporter.enabled_reporters = [
 Then you can use it in your code:
 
 ```ruby
-ActionReporter.audited_user = current_user
+ActionReporter.current_user = current_user
+ActionReporter.current_request_uuid = request.env['action_dispatch.request_id']
+ActionReporter.current_remote_addr = request.env['action_dispatch.remote_ip']
 ActionReporter.context(entry_id: entry.id)
 ActionReporter.notify('Something went wrong', context: { record: record })
 ```

@@ -21,7 +21,7 @@ module ActionReporter
       honeybadger_class.check_in(check_in_id)
     end
 
-    def audited_user=(user)
+    def current_user=(user)
       honeybadger_class.context(user_global_id: user.to_global_id.to_s) if user
     end
   end

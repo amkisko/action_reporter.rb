@@ -33,11 +33,11 @@ RSpec.describe ActionReporter::RailsReporter do
       expect(subject).to eq(context)
     end
 
-    context 'when context contains audited_user' do
-      let(:context) { { foo: 'bar', audited_user: 'user' } }
+    context 'when context contains current_user' do
+      let(:context) { { foo: 'bar', current_user: 'user' } }
 
-      it 'returns context without audited_user' do
-        expect(subject).to eq({ audited_user: 'user', foo: 'bar' })
+      it 'returns context without current_user' do
+        expect(subject).to eq({ current_user: 'user', foo: 'bar' })
       end
     end
 

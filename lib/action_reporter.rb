@@ -10,7 +10,7 @@ require 'action_reporter/paper_trail_reporter'
 module ActionReporter
   module_function
 
-  VERSION = '1.4.1'.freeze
+  VERSION = '1.5.0'.freeze
 
   AVAILABLE_REPORTERS = [
     ActionReporter::RailsReporter,
@@ -55,15 +55,42 @@ module ActionReporter
     end
   end
 
-  def audited_user
-    enabled_reporters.find { |r| r.respond_to?(:audited_user) }&.audited_user
+  def current_user
+    @current_user
   end
 
-  def audited_user=(user)
+  def current_user=(user)
+    @current_user = user
     enabled_reporters.each do |reporter|
-      next unless reporter.respond_to?(:audited_user=)
+      next unless reporter.respond_to?(:current_user=)
 
-      reporter.audited_user = user
+      reporter.current_user = user
+    end
+  end
+
+  def current_request_uuid
+    @current_request_uuid
+  end
+
+  def current_request_uuid=(request_uuid)
+    @current_request_uuid = request_uuid
+    enabled_reporters.each do |reporter|
+      next unless reporter.respond_to?(:current_request_uuid=)
+
+      reporter.current_request_uuid = request_uuid
+    end
+  end
+
+  def current_remote_addr
+    @current_remote_addr
+  end
+
+  def current_remote_addr=(remote_addr)
+    @current_remote_addr = remote_addr
+    enabled_reporters.each do |reporter|
+      next unless reporter.respond_to?(:current_remote_addr=)
+
+      reporter.current_remote_addr = remote_addr
     end
   end
 

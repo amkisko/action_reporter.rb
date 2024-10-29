@@ -6,22 +6,36 @@ module ActionReporter
     end
 
     def context(args)
-      Audited.store[:current_remote_address] = args[:remote_addr] if args[
-        :remote_addr
-      ].present?
     end
 
     def reset_context
       Audited.store.delete(:current_remote_address)
-      Audited.store.delete(:audited_user)
+      Audited.store.delete(:current_request_uuid)
+      Audited.store.delete(:current_user)
     end
 
-    def audited_user
-      Audited.store[:audited_user]
+    def current_user
+      Audited.store[:current_user]
     end
 
-    def audited_user=(user)
-      Audited.store[:audited_user] = user
+    def current_user=(user)
+      Audited.store[:current_user] = user
+    end
+
+    def current_request_uuid
+      Audited.store[:current_request_uuid]
+    end
+
+    def current_request_uuid=(request_uuid)
+      Audited.store[:current_request_uuid] = request_uuid
+    end
+
+    def current_remote_addr
+      Audited.store[:current_remote_address]
+    end
+
+    def current_remote_addr=(remote_addr)
+      Audited.store[:current_remote_address] = remote_addr
     end
   end
 end

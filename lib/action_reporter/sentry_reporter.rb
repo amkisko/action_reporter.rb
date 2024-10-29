@@ -22,7 +22,7 @@ module ActionReporter
       sentry_class.get_current_scope.set_context("context", {})
     end
 
-    def audited_user=(user)
+    def current_user=(user)
       sentry_class.set_user(user_global_id: user&.to_global_id&.to_s)
     end
   end
