@@ -1,0 +1,7 @@
+{
+  "editor.defaultFormatter": "trunk.io",
+  "editor.formatOnSave": false,
+  "editor.detectIndentation": false,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true
+}

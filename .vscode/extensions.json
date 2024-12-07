@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "donjayamanne.githistory",
+    "editorconfig.editorconfig",
+    "mikestead.dotenv",
+    "anweber.vscode-httpyac",
+    "shopify.ruby-lsp",
+    "bung87.vscode-gemfile",
+    "wayou.vscode-todo-highlight",
+    "vscode-icons-team.vscode-icons",
+    "koichisasada.vscode-rdbg",
+    "fooo.ruby-spec-runner",
+    "nhoizey.gremlins",
+    "streetsidesoftware.code-spell-checker",
+    "dewski.simplecov",
+    "trunk.io"
+  ]
+}
