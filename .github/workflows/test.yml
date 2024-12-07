@@ -30,6 +30,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - uses: codecov/test-results-action@v1
+        if: ${{ !cancelled() }}
         continue-on-error: true
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
