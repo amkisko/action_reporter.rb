@@ -38,6 +38,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "paper_trail", "~> 15"
 
   gem.add_development_dependency "rspec", "~> 3"
+  gem.add_development_dependency "rspec_junit_formatter", "~> 0.6"
   gem.add_development_dependency "webmock", "~> 3"
   gem.add_development_dependency "pry", "~> 0.14"
   gem.add_development_dependency "simplecov", "~> 0.21"
