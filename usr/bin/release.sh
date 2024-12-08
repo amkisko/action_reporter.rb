@@ -22,6 +22,14 @@ VERSION=$(grep -Eo "VERSION\s*=\s*'.+'" lib/action_reporter.rb  | grep -Eo "[0-9
 GEM_FILE="$GEM_NAME-$VERSION.gem"
 
 e "gem build $GEM_NAME.gemspec"
-e "gem push $GEM_FILE"
 
+echo "Ready to release $GEM_FILE $VERSION"
+read -p "Continue? [Y/n] " answer
+if [[ "$answer" != "Y" ]]; then
+  echo "Exiting"
+  exit 1
+fi
+
+e "gem push $GEM_FILE"
 e "git tag $VERSION && git push --tags"
+e "gh release create $VERSION --generate-notes"
