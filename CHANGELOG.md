@@ -1,3 +1,7 @@
+# 1.5.2
+
+* Add Audited context support
+
 # 1.5.1
 
 * Fix Audited current user setter to use `audited_user`
