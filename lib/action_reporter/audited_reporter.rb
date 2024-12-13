@@ -6,12 +6,14 @@ module ActionReporter
     end
 
     def context(args)
+      Audited.context = Audited.context.merge(args) if Audited.respond_to?(:context=)
     end
 
     def reset_context
       Audited.store.delete(:current_remote_address)
       Audited.store.delete(:current_request_uuid)
       Audited.store.delete(:audited_user)
+      Audited.context = {} if Audited.respond_to?(:context=)
     end
 
     def current_user
