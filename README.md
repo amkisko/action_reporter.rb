@@ -36,17 +36,17 @@ gem 'action_reporter'
 
 ## Usage
 
-Put this in your `config/initializers/action_reporter.rb` file:
+Put this in your `config/initializers/action_reporter.rb` file and uncomment wanted plugins:
 
 ```ruby
 ActionReporter.enabled_reporters = [
-  ActionReporter::RailsReporter.new,
+  (ActionReporter::RailsReporter.new if Rails.env.development?),
   # ActionReporter::AuditedReporter.new,
   # ActionReporter::PaperTrailReporter.new,
   # ActionReporter::SentryReporter.new,
   # ActionReporter::HoneybadgerReporter.new,
   # ActionReporter::ScoutApmReporter.new
-]
+].compact
 ```
 
 Then you can use it in your code:
@@ -79,12 +79,15 @@ end
 Bug reports and pull requests are welcome on GitHub at https://github.com/amkisko/action_reporter.rb
 
 Contribution policy:
-- It might take up to 2 calendar weeks to review and merge critical fixes
-- It might take up to 6 calendar months to review and merge pull request
-- It might take up to 1 calendar year to review an issue
 - New integrations and third-party features are not nessessarily added to the gem
 - Pull request should have test coverage for affected parts
 - Pull request should have changelog entry
+
+Review policy:
+- It might take up to 2 calendar weeks to review and merge critical fixes
+- It might take up to 6 calendar months to review and merge pull request
+- It might take up to 1 calendar year to review an issue
+
 
 ## Publishing
 
