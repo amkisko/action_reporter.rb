@@ -11,5 +11,5 @@ jobs:
       checks: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: trunk-io/trunk-action@v1
