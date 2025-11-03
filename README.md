@@ -79,7 +79,7 @@ end
 Bug reports and pull requests are welcome on GitHub at https://github.com/amkisko/action_reporter.rb
 
 Contribution policy:
-- New integrations and third-party features are not nessessarily added to the gem
+- New features are not necessarily added to the gem
 - Pull request should have test coverage for affected parts
 - Pull request should have changelog entry
 
