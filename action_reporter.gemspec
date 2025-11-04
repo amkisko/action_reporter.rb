@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   repository_url = "https://github.com/amkisko/action_reporter.rb"
 
   gem.authors = ["Andrei Makarov"]
-  gem.email = ["andrei@kiskolabs.com"]
+  gem.email = ["contact@kiskolabs.com"]
   gem.homepage = repository_url
   gem.description = "Ruby wrapper for multiple reporting services"
   gem.summary = "See description"
