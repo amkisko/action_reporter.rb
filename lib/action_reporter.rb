@@ -2,6 +2,10 @@ require "action_reporter/version"
 require "action_reporter/utils"
 require "action_reporter/base"
 require "action_reporter/current"
+require "action_reporter/plugin_discovery"
+
+# Core reporters are still required for backward compatibility
+# But discovery mechanism allows for lazy loading and custom reporters
 require "action_reporter/rails_reporter"
 require "action_reporter/honeybadger_reporter"
 require "action_reporter/sentry_reporter"
@@ -12,6 +16,8 @@ require "action_reporter/paper_trail_reporter"
 module ActionReporter
   module_function
 
+  # Legacy hardcoded list (maintained for backward compatibility)
+  # Use `available_reporters` for auto-discovered reporters
   AVAILABLE_REPORTERS = [
     ActionReporter::RailsReporter,
     ActionReporter::HoneybadgerReporter,
@@ -20,6 +26,24 @@ module ActionReporter
     ActionReporter::AuditedReporter,
     ActionReporter::PaperTrailReporter
   ].freeze
+
+  # Get available reporters (auto-discovered + registered)
+  # This is lazy-loaded and does not block application boot
+  # @return [Array<Class>] Array of reporter classes
+  def available_reporters
+    PluginDiscovery.available_reporters
+  end
+
+  # Register a custom reporter
+  # This allows third-party gems or custom code to register reporters
+  # @param name [Symbol] Reporter name
+  # @param class_name [String] Fully qualified class name
+  # @param require_path [String] Path to require
+  # @example
+  #   ActionReporter.register_reporter(:custom, class_name: "MyApp::CustomReporter", require_path: "my_app/custom_reporter")
+  def register_reporter(name, class_name:, require_path:)
+    PluginDiscovery.register(name, class_name: class_name, require_path: require_path)
+  end
 
   @enabled_reporters = []
   @logger = nil
