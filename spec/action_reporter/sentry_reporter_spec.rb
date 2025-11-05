@@ -69,4 +69,27 @@ RSpec.describe ActionReporter::SentryReporter do
       subject
     end
   end
+
+  describe "#transaction_id=" do
+    subject(:transaction_id=) { instance.transaction_id = transaction_id }
+
+    let(:transaction_id) { "txn-123" }
+
+    it "sets transactionId tag" do
+      expect(Sentry).to receive(:set_tags).with(transactionId: transaction_id).and_call_original
+      subject
+    end
+  end
+
+  describe "#transaction_name=" do
+    subject(:transaction_name=) { instance.transaction_name = transaction_name }
+
+    let(:transaction_name) { "GET /api/users" }
+
+    it "sets transaction name on scope" do
+      expect(Sentry).to receive(:configure_scope).and_yield(Sentry.get_current_scope)
+      expect(Sentry.get_current_scope).to receive(:set_transaction_name).with(transaction_name).and_call_original
+      subject
+    end
+  end
 end

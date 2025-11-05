@@ -49,17 +49,53 @@ RSpec.describe ActionReporter::Current do
     end
   end
 
+  describe ".transaction_id" do
+    before do
+      described_class.reset
+    end
+
+    it "returns nil initially" do
+      expect(described_class.transaction_id).to be_nil
+    end
+
+    it "returns set value" do
+      id = "txn-123"
+      described_class.transaction_id = id
+      expect(described_class.transaction_id).to eq(id)
+    end
+  end
+
+  describe ".transaction_name" do
+    before do
+      described_class.reset
+    end
+
+    it "returns nil initially" do
+      expect(described_class.transaction_name).to be_nil
+    end
+
+    it "returns set value" do
+      name = "GET /api/users"
+      described_class.transaction_name = name
+      expect(described_class.transaction_name).to eq(name)
+    end
+  end
+
   describe ".reset" do
     it "resets all attributes" do
       described_class.current_user = double("User")
       described_class.current_request_uuid = "123-456"
       described_class.current_remote_addr = "192.168.1.1"
+      described_class.transaction_id = "txn-123"
+      described_class.transaction_name = "GET /api/users"
 
       described_class.reset
 
       expect(described_class.current_user).to be_nil
       expect(described_class.current_request_uuid).to be_nil
       expect(described_class.current_remote_addr).to be_nil
+      expect(described_class.transaction_id).to be_nil
+      expect(described_class.transaction_name).to be_nil
     end
   end
 end

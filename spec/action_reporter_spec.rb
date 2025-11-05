@@ -110,20 +110,28 @@ RSpec.describe ActionReporter do
       user = double("User")
       uuid = "123-456-789"
       addr = "192.168.1.1"
+      transaction_id = "txn-123"
+      transaction_name = "TestTransaction"
 
       described_class.current_user = user
       described_class.current_request_uuid = uuid
       described_class.current_remote_addr = addr
+      described_class.transaction_id = transaction_id
+      described_class.transaction_name = transaction_name
 
       expect(described_class.current_user).to eq(user)
       expect(described_class.current_request_uuid).to eq(uuid)
       expect(described_class.current_remote_addr).to eq(addr)
+      expect(described_class.transaction_id).to eq(transaction_id)
+      expect(described_class.transaction_name).to eq(transaction_name)
 
       described_class.reset_context
 
       expect(described_class.current_user).to be_nil
       expect(described_class.current_request_uuid).to be_nil
       expect(described_class.current_remote_addr).to be_nil
+      expect(described_class.transaction_id).to be_nil
+      expect(described_class.transaction_name).to be_nil
     end
   end
 
@@ -596,6 +604,235 @@ RSpec.describe ActionReporter do
       expect(described_class.current_user).to be_nil
       expect(described_class.current_request_uuid).to be_nil
       expect(described_class.current_remote_addr).to be_nil
+    end
+  end
+
+  describe ".transaction_id" do
+    before do
+      described_class.enabled_reporters = []
+      described_class.reset_context
+    end
+
+    it "returns nil initially" do
+      expect(described_class.transaction_id).to be_nil
+    end
+
+    it "returns the set value" do
+      id = "txn-123"
+      described_class.transaction_id = id
+      expect(described_class.transaction_id).to eq(id)
+    end
+
+    context "when reporter responds to transaction_id=" do
+      let(:reporter) { double("Reporter") }
+
+      before do
+        described_class.enabled_reporters = [reporter]
+      end
+
+      it "sets transaction_id on reporters" do
+        id = "txn-123"
+        allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
+        expect(reporter).to receive(:respond_to?).with(:transaction_id=).and_return(true)
+        expect(reporter).to receive(:transaction_id=).with(id)
+        described_class.transaction_id = id
+      end
+
+      it "sets context with transaction_id" do
+        id = "txn-123"
+        allow(reporter).to receive(:respond_to?).with(:transaction_id=).and_return(true)
+        allow(reporter).to receive(:transaction_id=)
+        allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
+        expect(described_class).to receive(:context).with(transaction_id: id)
+        described_class.transaction_id = id
+      end
+    end
+  end
+
+  describe ".transaction_name" do
+    before do
+      described_class.enabled_reporters = []
+      described_class.reset_context
+    end
+
+    it "returns nil initially" do
+      expect(described_class.transaction_name).to be_nil
+    end
+
+    it "returns the set value" do
+      name = "GET /api/users"
+      described_class.transaction_name = name
+      expect(described_class.transaction_name).to eq(name)
+    end
+
+    context "when reporter responds to transaction_name=" do
+      let(:reporter) { double("Reporter") }
+
+      before do
+        described_class.enabled_reporters = [reporter]
+      end
+
+      it "sets transaction_name on reporters" do
+        name = "GET /api/users"
+        allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
+        expect(reporter).to receive(:respond_to?).with(:transaction_name=).and_return(true)
+        expect(reporter).to receive(:transaction_name=).with(name)
+        described_class.transaction_name = name
+      end
+
+      it "sets context with transaction_name" do
+        name = "GET /api/users"
+        allow(reporter).to receive(:respond_to?).with(:transaction_name=).and_return(true)
+        allow(reporter).to receive(:transaction_name=)
+        allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
+        expect(described_class).to receive(:context).with(transaction_name: name)
+        described_class.transaction_name = name
+      end
+    end
+  end
+
+  describe ".transaction" do
+    before do
+      described_class.enabled_reporters = []
+      described_class.reset_context
+    end
+
+    it "raises ArgumentError when no block is given" do
+      expect {
+        described_class.transaction(name: "Test")
+      }.to raise_error(ArgumentError, "transaction requires a block")
+    end
+
+    it "executes the block" do
+      result = described_class.transaction { "result" }
+      expect(result).to eq("result")
+    end
+
+    it "sets transaction name and ID within block" do
+      described_class.transaction(name: "TestTransaction", id: "txn-123") do
+        expect(described_class.transaction_name).to eq("TestTransaction")
+        expect(described_class.transaction_id).to eq("txn-123")
+      end
+    end
+
+    it "restores previous transaction name after block" do
+      described_class.transaction_name = "PreviousName"
+      described_class.transaction(name: "NewName") do
+        expect(described_class.transaction_name).to eq("NewName")
+      end
+      expect(described_class.transaction_name).to eq("PreviousName")
+    end
+
+    it "restores previous transaction ID after block" do
+      described_class.transaction_id = "previous-id"
+      described_class.transaction(id: "new-id") do
+        expect(described_class.transaction_id).to eq("new-id")
+      end
+      expect(described_class.transaction_id).to eq("previous-id")
+    end
+
+    it "restores previous values even when exception is raised" do
+      described_class.transaction_name = "PreviousName"
+      described_class.transaction_id = "previous-id"
+
+      expect {
+        described_class.transaction(name: "NewName", id: "new-id") do
+          raise StandardError, "Test error"
+        end
+      }.to raise_error(StandardError, "Test error")
+
+      expect(described_class.transaction_name).to eq("PreviousName")
+      expect(described_class.transaction_id).to eq("previous-id")
+    end
+
+    it "sets additional context" do
+      reporter = double("Reporter")
+      described_class.enabled_reporters = [reporter]
+      allow(reporter).to receive(:respond_to?).with(:context).and_return(true)
+      allow(reporter).to receive(:respond_to?).with(:transaction_name=).and_return(false)
+      allow(reporter).to receive(:respond_to?).with(:transaction_id=).and_return(false)
+
+      expect(reporter).to receive(:context).with(hash_including(transaction_name: "Test"))
+      expect(reporter).to receive(:context).with(hash_including(foo: "bar"))
+      expect(reporter).to receive(:context).with(hash_including(transaction_name: nil))
+      described_class.transaction(name: "Test", foo: "bar") do
+      end
+    end
+
+    it "does not restore when name/id are not provided" do
+      described_class.transaction_name = "PreviousName"
+      described_class.transaction_id = "previous-id"
+
+      described_class.transaction(foo: "bar") do
+        expect(described_class.transaction_name).to eq("PreviousName")
+        expect(described_class.transaction_id).to eq("previous-id")
+      end
+
+      expect(described_class.transaction_name).to eq("PreviousName")
+      expect(described_class.transaction_id).to eq("previous-id")
+    end
+
+    it "supports nested transactions" do
+      described_class.transaction(name: "Outer") do
+        expect(described_class.transaction_name).to eq("Outer")
+        described_class.transaction(name: "Inner") do
+          expect(described_class.transaction_name).to eq("Inner")
+        end
+        expect(described_class.transaction_name).to eq("Outer")
+      end
+      expect(described_class.transaction_name).to be_nil
+    end
+  end
+
+  describe ".reset_context" do
+    it "resets transaction_id and transaction_name" do
+      described_class.transaction_id = "txn-123"
+      described_class.transaction_name = "TestTransaction"
+      described_class.reset_context
+      expect(described_class.transaction_id).to be_nil
+      expect(described_class.transaction_name).to be_nil
+    end
+  end
+
+  describe "transaction error handling" do
+    it "handles transaction_id= errors" do
+      reporter = double("Reporter")
+      logger = double("Logger")
+
+      described_class.enabled_reporters = [reporter]
+      described_class.logger = logger
+      described_class.error_handler = nil
+      allow(logger).to receive(:error)
+      allow(logger).to receive(:debug)
+      allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
+
+      id = "txn-123"
+      allow(reporter).to receive(:respond_to?).with(:transaction_id=).and_return(true)
+      allow(reporter).to receive(:transaction_id=).and_raise(StandardError.new("Set failed"))
+
+      expect(logger).to receive(:error).with(/ActionReporter: .*#transaction_id= failed/)
+
+      described_class.transaction_id = id
+    end
+
+    it "handles transaction_name= errors" do
+      reporter = double("Reporter")
+      logger = double("Logger")
+
+      described_class.enabled_reporters = [reporter]
+      described_class.logger = logger
+      described_class.error_handler = nil
+      allow(logger).to receive(:error)
+      allow(logger).to receive(:debug)
+      allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
+
+      name = "TestTransaction"
+      allow(reporter).to receive(:respond_to?).with(:transaction_name=).and_return(true)
+      allow(reporter).to receive(:transaction_name=).and_raise(StandardError.new("Set failed"))
+
+      expect(logger).to receive(:error).with(/ActionReporter: .*#transaction_name= failed/)
+
+      described_class.transaction_name = name
     end
   end
 end
