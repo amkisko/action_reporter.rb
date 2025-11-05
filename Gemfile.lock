@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    action_reporter (1.5.2)
+    action_reporter (2.0.0)
       rails (> 5)
 
 GEM
@@ -88,6 +88,9 @@ GEM
       activerecord (>= 5.2, < 8.0)
       activesupport (>= 5.2, < 8.0)
     base64 (0.2.0)
+    benchmark-ips (2.14.0)
+    benchmark-memory (0.2.0)
+      memory_profiler (~> 1)
     bigdecimal (3.1.8)
     bigdecimal (3.1.8-java)
     builder (3.3.0)
@@ -130,6 +133,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.0.4)
+    memory_profiler (1.1.0)
     method_source (1.1.0)
     mini_mime (1.1.5)
     minitest (5.25.1)
@@ -322,6 +326,8 @@ DEPENDENCIES
   action_reporter!
   appraisal (~> 2.4)
   audited (~> 5)
+  benchmark-ips (~> 2.13)
+  benchmark-memory (~> 0.2)
   bundler (~> 2)
   honeybadger (~> 5)
   paper_trail (~> 15)
