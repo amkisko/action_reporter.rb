@@ -25,5 +25,15 @@ module ActionReporter
     def current_user=(user)
       sentry_class.set_user(user_global_id: user&.to_global_id&.to_s)
     end
+
+    def transaction_id=(transaction_id)
+      sentry_class.set_tags(transactionId: transaction_id)
+    end
+
+    def transaction_name=(transaction_name)
+      sentry_class.configure_scope do |scope|
+        scope.set_transaction_name(transaction_name)
+      end
+    end
   end
 end

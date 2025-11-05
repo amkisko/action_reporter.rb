@@ -31,10 +31,28 @@ module ActionReporter
         Thread.current[:action_reporter_current_remote_addr] = addr
       end
 
+      def transaction_id
+        Thread.current[:action_reporter_transaction_id]
+      end
+
+      def transaction_id=(transaction_id)
+        Thread.current[:action_reporter_transaction_id] = transaction_id
+      end
+
+      def transaction_name
+        Thread.current[:action_reporter_transaction_name]
+      end
+
+      def transaction_name=(transaction_name)
+        Thread.current[:action_reporter_transaction_name] = transaction_name
+      end
+
       def reset
         Thread.current[:action_reporter_current_user] = nil
         Thread.current[:action_reporter_current_request_uuid] = nil
         Thread.current[:action_reporter_current_remote_addr] = nil
+        Thread.current[:action_reporter_transaction_id] = nil
+        Thread.current[:action_reporter_transaction_name] = nil
       end
     end
   end
