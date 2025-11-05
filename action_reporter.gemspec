@@ -37,10 +37,14 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "scout_apm", "~> 5"
   gem.add_development_dependency "paper_trail", "~> 15"
 
-  gem.add_development_dependency "rspec", "~> 3"
+  gem.add_development_dependency "bundler", "~> 2"
+  gem.add_development_dependency "rspec", "~> 3.12"
   gem.add_development_dependency "rspec_junit_formatter", "~> 0.6"
   gem.add_development_dependency "webmock", "~> 3"
   gem.add_development_dependency "pry", "~> 0.14"
   gem.add_development_dependency "simplecov", "~> 0.21"
-  gem.add_development_dependency "simplecov-cobertura", "~> 2"
+  gem.add_development_dependency "simplecov-cobertura", "~> 3"
+  gem.add_development_dependency "standard", "~> 1.0"
+  gem.add_development_dependency "appraisal", "~> 2.4"
+  gem.add_development_dependency "rbs", "~> 3.0"
 end

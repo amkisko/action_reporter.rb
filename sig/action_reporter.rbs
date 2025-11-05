@@ -1,0 +1,9 @@
+module ActionReporter
+  VERSION: String
+
+  AVAILABLE_REPORTERS: Array[singleton(Class)]
+  
+  # Type signatures for all ActionReporter modules and classes
+  # See individual files in sig/action_reporter/ for detailed signatures
+end
+
