@@ -119,6 +119,8 @@ module ActionReporter
     Current.current_user = nil
     Current.current_request_uuid = nil
     Current.current_remote_addr = nil
+    Current.transaction_id = nil
+    Current.transaction_name = nil
 
     enabled_reporters.each do |reporter|
       next unless reporter.respond_to?(:reset_context)
@@ -194,6 +196,63 @@ module ActionReporter
       rescue => e
         handle_reporter_error(reporter, e, "check_in")
       end
+    end
+  end
+
+  def transaction_id
+    Current.transaction_id
+  end
+
+  def transaction_id=(transaction_id)
+    Current.transaction_id = transaction_id
+    context(transaction_id: transaction_id)
+
+    enabled_reporters.each do |reporter|
+      next unless reporter.respond_to?(:transaction_id=)
+
+      begin
+        reporter.transaction_id = transaction_id
+      rescue => e
+        handle_reporter_error(reporter, e, "transaction_id=")
+      end
+    end
+  end
+
+  def transaction_name
+    Current.transaction_name
+  end
+
+  def transaction_name=(transaction_name)
+    Current.transaction_name = transaction_name
+    context(transaction_name: transaction_name)
+
+    enabled_reporters.each do |reporter|
+      next unless reporter.respond_to?(:transaction_name=)
+
+      begin
+        reporter.transaction_name = transaction_name
+      rescue => e
+        handle_reporter_error(reporter, e, "transaction_name=")
+      end
+    end
+  end
+
+  def transaction(name: nil, id: nil, **context_options, &block)
+    raise ArgumentError, "transaction requires a block" unless block_given?
+
+    previous_name = transaction_name
+    previous_id = transaction_id
+
+    begin
+      self.transaction_name = name if name
+      self.transaction_id = id if id
+
+      context(context_options) if context_options.any?
+
+      block.call
+    ensure
+      self.transaction_name = previous_name if name
+      self.transaction_id = previous_id if id
     end
   end
 end

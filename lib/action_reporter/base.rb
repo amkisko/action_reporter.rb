@@ -50,5 +50,11 @@ module ActionReporter
 
     def reset_context
     end
+
+    def transaction_id=(transaction_id)
+    end
+
+    def transaction_name=(transaction_name)
+    end
   end
 end
