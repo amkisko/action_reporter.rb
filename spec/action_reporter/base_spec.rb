@@ -25,11 +25,11 @@ RSpec.describe ActionReporter::Base do
         })
       end
 
-      it "raises error when gem version doesn't satisfy requirement" do
+      it "raises ActionReporter::ConfigurationError when gem version doesn't satisfy requirement" do
         instance = test_class.new
         expect {
           instance.nonexistent_class
-        }.to raise_error(ActionReporter::Error, /nonexistent \(~> 1.0\) is not loaded/)
+        }.to raise_error(ActionReporter::ConfigurationError, /nonexistent \(~> 1.0\) is not loaded/)
       end
     end
   end
@@ -43,10 +43,10 @@ RSpec.describe ActionReporter::Base do
         allow(identifier).to receive(:respond_to?).with(:to_s).and_return(false)
       end
 
-      it "raises ArgumentError" do
+      it "raises ActionReporter::Error" do
         expect {
           instance.resolve_check_in_id(identifier)
-        }.to raise_error(ArgumentError, /Unknown check-in identifier/)
+        }.to raise_error(ActionReporter::Error, /Unknown check-in identifier/)
       end
     end
   end

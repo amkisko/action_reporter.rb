@@ -102,6 +102,8 @@ module ActionReporter
   end
 
   def context(args)
+    raise ArgumentError, "context must be a Hash" unless args.is_a?(Hash)
+
     enabled_reporters.each do |reporter|
       next unless reporter.respond_to?(:context)
 
