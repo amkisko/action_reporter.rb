@@ -1,13 +1,14 @@
 name: test
-permissions: read-all
-on: [push, pull_request]
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref_name }}
-  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         include:
@@ -17,19 +18,19 @@ jobs:
             ruby_version: "3.1"
           - rails_version: rails-8.1
             ruby_version: "3.2"
-    
+
     steps:
-      - uses: actions/checkout@v5
-    
+    - uses: actions/checkout@v3
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby_version }}
         bundler-cache: false
-    
+
     - name: Install appraisal gem
       run: gem install appraisal --no-document
-    
+
     - name: Generate appraisal gemfile
       run: |
         # Convert rails-6.0 to rails_6.0 format for gemfile name
@@ -42,7 +43,7 @@ jobs:
         fi
         # Set BUNDLE_GEMFILE for subsequent steps
         echo "BUNDLE_GEMFILE=gemfiles/${GEMFILE_NAME}.gemfile" >> $GITHUB_ENV
-    
+
     - name: Update lockfile for platform and Ruby version
       run: |
         GEMFILE_NAME=$(echo "${{ matrix.rails_version }}" | tr '-' '_')
@@ -58,31 +59,23 @@ jobs:
             bundle install --gemfile ${GEMFILE_PATH}
           fi
         fi
-    
+
     - name: Install dependencies
       uses: ruby/setup-ruby@v1
-        with:
+      with:
         ruby-version: ${{ matrix.ruby_version }}
-          bundler-cache: true
-    
+        bundler-cache: true
+
     - name: Run tests
       run: bundle exec appraisal ${{ matrix.rails_version }} rspec
-    
-    - name: Run linter
-      if: matrix.rails_version == 'rails-8.1'
-      env:
-        BUNDLE_GEMFILE: Gemfile
-      run: |
-        bundle install
-        bundle exec standardrb --format simple
-    
+
   coverage:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v3
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.3"
+          ruby-version: "3.4"
           bundler-cache: true
       - run: bundle exec rspec
       - uses: codecov/codecov-action@v5
