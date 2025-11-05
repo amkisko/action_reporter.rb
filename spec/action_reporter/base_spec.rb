@@ -73,4 +73,16 @@ RSpec.describe ActionReporter::Base do
       end
     end
   end
+
+  describe "#transaction_id=" do
+    it "does nothing" do
+      expect { instance.transaction_id = "txn-123" }.not_to raise_error
+    end
+  end
+
+  describe "#transaction_name=" do
+    it "does nothing" do
+      expect { instance.transaction_name = "TestTransaction" }.not_to raise_error
+    end
+  end
 end
