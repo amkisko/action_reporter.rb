@@ -74,4 +74,3 @@ RSpec.describe ActionReporter::Base do
     end
   end
 end
-
