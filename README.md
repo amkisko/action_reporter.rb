@@ -61,6 +61,37 @@ ActionReporter.context(entry_id: entry.id)
 ActionReporter.notify('Something went wrong', context: { record: record })
 ```
 
+## Custom Reporters
+
+You can add custom reporters for any service (e.g., Datadog, New Relic, custom logging):
+
+```ruby
+# lib/reporters/datadog_reporter.rb
+module ActionReporter
+  class DatadogReporter < Base
+    def initialize(api_key:)
+      @api_key = api_key
+    end
+
+    def notify(error, context: {})
+      # Send to Datadog
+    end
+  end
+end
+
+# config/initializers/action_reporter.rb
+ActionReporter.register_reporter(:datadog,
+  class_name: "ActionReporter::DatadogReporter",
+  require_path: "reporters/datadog_reporter"
+)
+
+ActionReporter.enabled_reporters = [
+  ActionReporter::DatadogReporter.new(api_key: ENV["DATADOG_API_KEY"])
+]
+```
+
+See [CUSTOM_REPORTERS.md](CUSTOM_REPORTERS.md) for detailed documentation on creating custom reporters.
+
 ## Hook debugger to notify method
 
 Apply patch on initializer level or before running the main code:
