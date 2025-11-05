@@ -26,4 +26,3 @@ task :rbs do
 end
 
 task default: :spec
-

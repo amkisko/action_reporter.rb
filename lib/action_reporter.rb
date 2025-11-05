@@ -1,16 +1,16 @@
-require 'action_reporter/utils'
-require 'action_reporter/base'
-require 'action_reporter/rails_reporter'
-require 'action_reporter/honeybadger_reporter'
-require 'action_reporter/sentry_reporter'
-require 'action_reporter/scout_apm_reporter'
-require 'action_reporter/audited_reporter'
-require 'action_reporter/paper_trail_reporter'
+require "action_reporter/utils"
+require "action_reporter/base"
+require "action_reporter/rails_reporter"
+require "action_reporter/honeybadger_reporter"
+require "action_reporter/sentry_reporter"
+require "action_reporter/scout_apm_reporter"
+require "action_reporter/audited_reporter"
+require "action_reporter/paper_trail_reporter"
 
 module ActionReporter
   module_function
 
-  VERSION = '1.5.2'.freeze
+  VERSION = "1.5.2".freeze
 
   AVAILABLE_REPORTERS = [
     ActionReporter::RailsReporter,
