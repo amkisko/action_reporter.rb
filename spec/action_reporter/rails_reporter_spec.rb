@@ -49,4 +49,28 @@ RSpec.describe ActionReporter::RailsReporter do
       end
     end
   end
+
+  describe "#reset_context" do
+    it "does nothing" do
+      expect { subject.reset_context }.not_to raise_error
+    end
+  end
+
+  describe "#check_in" do
+    let(:identifier) { double("Identifier", reporter_check_in: "check-in-id") }
+
+    it "resolves check_in id and logs it" do
+      expect(logger_stub).to receive(:info).with("Reporter check-in: check-in-id")
+      subject.check_in(identifier)
+    end
+
+    context "when identifier is a string" do
+      let(:identifier) { "check-in-id" }
+
+      it "logs the string" do
+        expect(logger_stub).to receive(:info).with("Reporter check-in: check-in-id")
+        subject.check_in(identifier)
+      end
+    end
+  end
 end
