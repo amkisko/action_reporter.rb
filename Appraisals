@@ -12,4 +12,3 @@ appraise "rails-8.1" do
   gem "activesupport", "~> 8.1.0"
   gem "railties", "~> 8.1.0"
 end
-
