@@ -1,3 +1,4 @@
+require "action_reporter/version"
 require "action_reporter/utils"
 require "action_reporter/base"
 require "action_reporter/rails_reporter"
@@ -9,8 +10,6 @@ require "action_reporter/paper_trail_reporter"
 
 module ActionReporter
   module_function
-
-  VERSION = "1.5.2".freeze
 
   AVAILABLE_REPORTERS = [
     ActionReporter::RailsReporter,

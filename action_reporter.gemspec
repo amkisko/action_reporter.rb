@@ -1,6 +1,8 @@
+require_relative "lib/action_reporter/version"
+
 Gem::Specification.new do |gem|
   gem.name = "action_reporter"
-  gem.version = File.read(File.expand_path("../lib/action_reporter.rb", __FILE__)).match(/VERSION\s*=\s*'(.*?)'/)[1]
+  gem.version = ActionReporter::VERSION
 
   gem.license = "MIT"
 
