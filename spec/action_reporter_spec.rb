@@ -70,6 +70,20 @@ RSpec.describe ActionReporter do
       expect(reporter).not_to receive(:context)
       described_class.context(context_data)
     end
+
+    it "raises ArgumentError when context is not a Hash" do
+      expect {
+        described_class.context("not a hash")
+      }.to raise_error(ArgumentError, "context must be a Hash")
+
+      expect {
+        described_class.context(nil)
+      }.to raise_error(ArgumentError, "context must be a Hash")
+
+      expect {
+        described_class.context([])
+      }.to raise_error(ArgumentError, "context must be a Hash")
+    end
   end
 
   describe ".reset_context" do

@@ -7,13 +7,15 @@ module ActionReporter
       define_method(method_name) do
         raise ActionReporter::Error.new("#{class_name} is not defined") unless Object.const_defined?(class_name)
 
-        @@class_cache ||= {}
-        @@class_cache[class_name] ||= begin
+        # Use instance variable instead of class variable for thread safety
+        # Each class gets its own cache, avoiding cross-class contamination
+        @class_cache ||= {}
+        @class_cache[class_name] ||= begin
           if gem_spec
             gem_name, version = gem_spec.scan(/([^(\s]+)\s*(?:\(([^)]+)\))?/).first
             latest_spec = Gem.loaded_specs[gem_name]
             version_satisfied = latest_spec && Gem::Requirement.new(version).satisfied_by?(latest_spec.version)
-            raise ActionReporter::Error.new("#{gem_spec} is not loaded") if !version_satisfied
+            raise ActionReporter::ConfigurationError.new("#{gem_spec} is not loaded") if !version_satisfied
           end
           Object.const_get(class_name)
         end
@@ -36,7 +38,7 @@ module ActionReporter
       elsif identifier.respond_to?(:to_s)
         identifier.to_s
       else
-        raise ArgumentError.new("Unknown check-in identifier: #{identifier.inspect}")
+        raise ActionReporter::Error.new("Unknown check-in identifier: #{identifier.inspect}")
       end
     end
 
