@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    action_reporter (1.5.2)
+    action_reporter (2.0.0)
       rails (> 5)
 
 GEM
