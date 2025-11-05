@@ -38,6 +38,16 @@ RSpec.describe ActionReporter::ScoutApmReporter do
   end
 
   describe "#reset_context" do
+    it "does nothing" do
+      expect { subject.reset_context }.not_to raise_error
+    end
+  end
+
+  describe "#ignore_transaction!" do
+    it "calls ignore_transaction! on ScoutApm::Context" do
+      expect(ScoutApm::Context).to receive(:ignore_transaction!)
+      subject.ignore_transaction!
+    end
   end
 
   describe "#current_user=" do

@@ -9,16 +9,29 @@ RSpec.describe ActionReporter::PaperTrailReporter do
   end
 
   describe "#context" do
+    it "does nothing" do
+      expect { subject.context({foo: "bar"}) }.not_to raise_error
+    end
+  end
+
+  describe "#current_user" do
+    it "returns current_user from whodunnit" do
+      user = double("User", to_global_id: "gid://user/1")
+      PaperTrail.request.whodunnit = user
+      expect(subject.current_user).to eq(user)
+      PaperTrail.request.whodunnit = nil
+    end
   end
 
   describe "#current_user=" do
-    subject(:current_user=) { instance.current_user = user }
-
-    let(:user) { double("User", to_global_id: "gid://user/1") }
+    before do
+      PaperTrail.request.whodunnit = nil
+    end
 
     it "sets current_user" do
+      user = double("User", to_global_id: "gid://user/1")
       expect(PaperTrail.request.whodunnit).to eq(nil)
-      subject
+      subject.current_user = user
       expect(PaperTrail.request.whodunnit).to eq(user)
     end
   end
