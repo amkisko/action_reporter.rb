@@ -8,6 +8,10 @@ RSpec.describe ActionReporter do
   describe ".enabled_reporters" do
     subject(:enabled_reporters) { described_class.enabled_reporters }
 
+    before do
+      described_class.enabled_reporters = []
+    end
+
     it "returns enabled reporters" do
       expect(subject).to eq([])
     end
