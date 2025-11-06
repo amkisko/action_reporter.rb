@@ -21,3 +21,5 @@
 
 *.local
 *.gem
+
+/gemfiles/*.lock
