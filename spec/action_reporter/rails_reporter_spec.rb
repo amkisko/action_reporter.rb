@@ -12,7 +12,7 @@ RSpec.describe ActionReporter::RailsReporter do
   describe "#notify" do
     it "prints notification" do
       expect(logger_stub).to receive(:info).with(
-        "Reporter notification: \"error\", {:foo=>\"bar\"}"
+        match(/Reporter notification: "error", \{(:foo=>|foo: )"bar"\}/)
       )
       subject.notify("error", context: {foo: "bar"})
     end
@@ -20,7 +20,7 @@ RSpec.describe ActionReporter::RailsReporter do
 
   describe "#context" do
     it "prints context" do
-      expect(logger_stub).to receive(:info).with("Reporter context: {:foo=>\"bar\"}")
+      expect(logger_stub).to receive(:info).with(match(/Reporter context: \{(:foo=>|foo: )"bar"\}/))
       subject.context({foo: "bar"})
     end
   end
