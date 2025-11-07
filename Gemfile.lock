@@ -340,20 +340,20 @@ PLATFORMS
 
 DEPENDENCIES
   action_reporter!
-  appraisal (~> 2.4)
+  appraisal (~> 2)
   audited (~> 5)
   bundler (~> 2)
   honeybadger (~> 5)
   paper_trail (~> 15)
-  pry (~> 0.14)
-  rbs (~> 3.0)
-  rspec (~> 3.12)
+  pry (~> 0.15)
+  rbs (~> 3)
+  rspec (~> 3)
   rspec_junit_formatter (~> 0.6)
   scout_apm (~> 5)
   sentry-ruby (~> 5)
-  simplecov (~> 0.21)
+  simplecov (~> 0.22)
   simplecov-cobertura (~> 3)
-  standard (~> 1.0)
+  standard (~> 1)
   webmock (~> 3)
 
 BUNDLED WITH
