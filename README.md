@@ -138,7 +138,7 @@ end
 
 ```bash
 bundle install
-bundle exec appraisal install
+bundle exec appraisal generate
 bundle exec rspec
 bin/appraisals
 bundle exec standardrb --fix
