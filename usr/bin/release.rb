@@ -6,7 +6,7 @@ def execute_command(command)
   green = "\033[0;32m"
   red = "\033[1;31m"
   nc = "\033[0m"
-  
+
   puts "#{green}#{command}#{nc}"
   unless system(command)
     puts "#{red}Command failed: #{command}#{nc}"
@@ -48,4 +48,3 @@ end
 execute_command("gem push #{gem_file}")
 execute_command("git tag #{version} && git push --tags")
 execute_command("gh release create #{version} --generate-notes")
-

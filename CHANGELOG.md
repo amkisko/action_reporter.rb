@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.0.1 (2025-11-14)
+
+- Fix false positives in gem version validation for git-based gems
+  - Remove strict version requirement check that caused `ConfigurationError` for valid git-based gem installations
+  - Class existence check is sufficient to ensure gem is loaded
+  - Fixes issue where `sentry-ruby` and other git-based gems were incorrectly flagged as not loaded
+
 ## 2.0.0 (2025-11-05)
 
 - Add performance benchmarks to measure CPU, memory, and response-time impact

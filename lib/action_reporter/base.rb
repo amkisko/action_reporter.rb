@@ -10,15 +10,7 @@ module ActionReporter
         # Use instance variable instead of class variable for thread safety
         # Each class gets its own cache, avoiding cross-class contamination
         @class_cache ||= {}
-        @class_cache[class_name] ||= begin
-          if gem_spec
-            gem_name, version = gem_spec.scan(/([^(\s]+)\s*(?:\(([^)]+)\))?/).first
-            latest_spec = Gem.loaded_specs[gem_name]
-            version_satisfied = latest_spec && Gem::Requirement.new(version).satisfied_by?(latest_spec.version)
-            raise ActionReporter::ConfigurationError.new("#{gem_spec} is not loaded") if !version_satisfied
-          end
-          Object.const_get(class_name)
-        end
+        @class_cache[class_name] ||= Object.const_get(class_name)
       end
     end
 
