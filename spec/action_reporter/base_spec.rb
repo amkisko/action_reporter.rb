@@ -17,19 +17,14 @@ RSpec.describe ActionReporter::Base do
       }.to raise_error(ActionReporter::Error, "NonExistent is not defined")
     end
 
-    context "when class is defined but gem version doesn't match" do
+    context "when class is defined" do
       before do
         stub_const("NonExistent", Class.new)
-        allow(Gem).to receive(:loaded_specs).and_return({
-          "nonexistent" => double("Spec", version: Gem::Version.new("0.9.0"))
-        })
       end
 
-      it "raises ActionReporter::ConfigurationError when gem version doesn't satisfy requirement" do
+      it "returns the class when it exists, regardless of gem version" do
         instance = test_class.new
-        expect {
-          instance.nonexistent_class
-        }.to raise_error(ActionReporter::ConfigurationError, /nonexistent \(~> 1.0\) is not loaded/)
+        expect(instance.nonexistent_class).to eq(NonExistent)
       end
     end
   end
