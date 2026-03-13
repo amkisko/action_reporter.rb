@@ -6,12 +6,6 @@
   - Remove `AVAILABLE_REPORTERS` constant
   - Stop eager requiring built-in reporters at boot
   - Built-in reporters are now loaded lazily through `ActionReporter.available_reporters`
-- Fix built-in reporter constant autoloading
-  - Add `autoload` mappings for built-in reporters (`RailsReporter`, `AuditedReporter`, `PaperTrailReporter`, `ActiveVersionReporter`, `SentryReporter`, `HoneybadgerReporter`, `ScoutApmReporter`)
-  - Fix `NameError: uninitialized constant ActionReporter::ActiveVersionReporter` when reporters are referenced directly from app initializers
-- Fix custom reporter lazy loading regression
-  - `PluginDiscovery.load_registered_reporter` now attempts `require` before constant lookup
-  - Registered reporters can now be loaded from `require_path` when class is not preloaded
 - Improve plugin discovery thread safety
   - Synchronize `register` writes with discovery mutex
   - Snapshot registered reporters under lock in `available_reporters` before iteration
@@ -25,10 +19,6 @@
   - New `ActionReporter::Current.reset_storage_adapter!`
   - Storage resolution order: explicit `storage_adapter` -> `ActiveSupport::IsolatedExecutionState` -> `Thread.current`
   - Enables fiber-aware request storage customization in non-Rails environments
-- Add regression coverage for lazy loading and storage behavior
-  - Add spec for loading registered reporter via `require_path` when class is not preloaded
-  - Add spec for transforming array-contained objects in deep context transform
-  - Add specs for `Current.storage_adapter` validation and precedence
 
 ## 2.0.2 (2026-03-13)
 
