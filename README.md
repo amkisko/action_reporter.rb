@@ -6,13 +6,6 @@ Ruby wrapper for multiple reporting services.
 
 Supported services: Rails logger, gem audited, gem PaperTrail, gem ActiveVersion, Sentry, Honeybadger, scoutapm.
 
-Sponsored by [Kisko Labs](https://www.kiskolabs.com).
-
-<a href="https://www.kiskolabs.com">
-  <img src="kisko.svg" width="200" alt="Sponsored by Kisko Labs" />
-</a>
-
-
 ## Installation
 
 Add to your Gemfile:
@@ -173,3 +166,11 @@ gem push action_reporter-*.gem
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+## Sponsors
+
+Sponsored by [Kisko Labs](https://www.kiskolabs.com).
+
+<a href="https://www.kiskolabs.com">
+  <img src="kisko.svg" width="200" alt="Sponsored by Kisko Labs" />
+</a>
