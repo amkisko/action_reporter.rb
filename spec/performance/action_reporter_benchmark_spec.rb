@@ -36,12 +36,12 @@ RSpec.describe "ActionReporter performance" do
     GC.compact if GC.respond_to?(:compact)
 
     before_stat = GC.stat if GC.respond_to?(:stat)
-    ObjectSpace.count_objects
+    ObjectSpace.count_objects if ObjectSpace.respond_to?(:count_objects)
 
     yield iterations
 
     after_stat = GC.stat if GC.respond_to?(:stat)
-    ObjectSpace.count_objects
+    ObjectSpace.count_objects if ObjectSpace.respond_to?(:count_objects)
 
     # Calculate allocated objects (TOTAL includes all objects, we want new allocations)
     allocated_objects = if before_stat && after_stat
