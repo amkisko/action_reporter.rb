@@ -39,6 +39,7 @@ RSpec.describe ActionReporter::HoneybadgerReporter do
 
   describe "#reset_context" do
     subject(:reset_context) { instance.reset_context }
+
     let(:new_context) { {foo: "bar"} }
 
     before do
