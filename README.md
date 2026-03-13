@@ -4,7 +4,7 @@
 
 Ruby wrapper for multiple reporting services.
 
-Supported services: Rails logger, gem audited, gem PaperTrail, Sentry, Honeybadger, scoutapm.
+Supported services: Rails logger, gem audited, gem PaperTrail, gem ActiveVersion, Sentry, Honeybadger, scoutapm.
 
 Sponsored by [Kisko Labs](https://www.kiskolabs.com).
 
@@ -33,6 +33,7 @@ ActionReporter.enabled_reporters = [
   (ActionReporter::RailsReporter.new if Rails.env.development?),
   # ActionReporter::AuditedReporter.new,
   # ActionReporter::PaperTrailReporter.new,
+  # ActionReporter::ActiveVersionReporter.new,
   # ActionReporter::SentryReporter.new,
   # ActionReporter::HoneybadgerReporter.new,
   # ActionReporter::ScoutApmReporter.new

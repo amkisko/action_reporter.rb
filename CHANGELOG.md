@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Unreleased
+
+- Add `ActiveVersionReporter` integration for the `active_version` gem
+  - Support context propagation via `ActiveVersion.context`
+  - Support current user, request UUID, and remote address through `ActiveVersion::RequestStore`
+
 ## 2.0.1 (2025-11-14)
 
 - Fix false positives in gem version validation for git-based gems

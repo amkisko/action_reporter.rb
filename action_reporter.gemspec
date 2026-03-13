@@ -38,6 +38,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "sentry-ruby", "~> 5"
   gem.add_development_dependency "scout_apm", "~> 5"
   gem.add_development_dependency "paper_trail", "~> 15"
+  gem.add_development_dependency "active_version", "~> 1"
 
   gem.add_development_dependency "bundler", "~> 2"
   gem.add_development_dependency "rspec", "~> 3"
