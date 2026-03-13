@@ -1,6 +1,7 @@
 require "spec_helper"
 require "rails"
 require "audited"
+require "action_reporter/audited_reporter"
 
 RSpec.describe ActionReporter::AuditedReporter do
   subject(:instance) { described_class.new }

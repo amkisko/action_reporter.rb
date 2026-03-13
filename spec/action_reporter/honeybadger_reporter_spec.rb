@@ -1,5 +1,6 @@
 require "spec_helper"
 require "honeybadger"
+require "action_reporter/honeybadger_reporter"
 
 RSpec.describe ActionReporter::HoneybadgerReporter do
   subject(:instance) { described_class.new }

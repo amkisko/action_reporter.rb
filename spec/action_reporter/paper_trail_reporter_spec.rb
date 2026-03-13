@@ -1,6 +1,7 @@
 require "spec_helper"
 require "rails"
 require "paper_trail"
+require "action_reporter/paper_trail_reporter"
 
 RSpec.describe ActionReporter::PaperTrailReporter do
   subject(:instance) { described_class.new }

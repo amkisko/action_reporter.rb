@@ -1,4 +1,6 @@
 require "spec_helper"
+require "action_reporter/rails_reporter"
+require "action_reporter/audited_reporter"
 
 RSpec.describe ActionReporter do
   it "has a version number" do

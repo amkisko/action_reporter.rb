@@ -1,4 +1,5 @@
 require "spec_helper"
+require "action_reporter/rails_reporter"
 
 # Example: Custom Datadog Reporter
 # This demonstrates how users can add custom reporters
