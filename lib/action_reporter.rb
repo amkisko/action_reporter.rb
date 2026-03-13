@@ -4,30 +4,16 @@ require "action_reporter/base"
 require "action_reporter/current"
 require "action_reporter/plugin_discovery"
 
-# Core reporters are still required for backward compatibility
-# But discovery mechanism allows for lazy loading and custom reporters
-require "action_reporter/rails_reporter"
-require "action_reporter/honeybadger_reporter"
-require "action_reporter/sentry_reporter"
-require "action_reporter/scout_apm_reporter"
-require "action_reporter/audited_reporter"
-require "action_reporter/paper_trail_reporter"
-require "action_reporter/active_version_reporter"
-
 module ActionReporter
-  module_function
+  autoload :RailsReporter, "action_reporter/rails_reporter"
+  autoload :AuditedReporter, "action_reporter/audited_reporter"
+  autoload :PaperTrailReporter, "action_reporter/paper_trail_reporter"
+  autoload :ActiveVersionReporter, "action_reporter/active_version_reporter"
+  autoload :SentryReporter, "action_reporter/sentry_reporter"
+  autoload :HoneybadgerReporter, "action_reporter/honeybadger_reporter"
+  autoload :ScoutApmReporter, "action_reporter/scout_apm_reporter"
 
-  # Legacy hardcoded list (maintained for backward compatibility)
-  # Use `available_reporters` for auto-discovered reporters
-  AVAILABLE_REPORTERS = [
-    ActionReporter::RailsReporter,
-    ActionReporter::HoneybadgerReporter,
-    ActionReporter::SentryReporter,
-    ActionReporter::ScoutApmReporter,
-    ActionReporter::AuditedReporter,
-    ActionReporter::PaperTrailReporter,
-    ActionReporter::ActiveVersionReporter
-  ].freeze
+  module_function
 
   # Get available reporters (auto-discovered + registered)
   # This is lazy-loaded and does not block application boot

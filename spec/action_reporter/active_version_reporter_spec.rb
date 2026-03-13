@@ -1,6 +1,7 @@
 require "spec_helper"
 require "rails"
 require "active_version"
+require "action_reporter/active_version_reporter"
 
 RSpec.describe ActionReporter::ActiveVersionReporter do
   subject(:instance) { described_class.new }

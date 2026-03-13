@@ -1,5 +1,6 @@
 require "spec_helper"
 require "sentry-ruby"
+require "action_reporter/sentry_reporter"
 
 RSpec.describe ActionReporter::SentryReporter do
   subject(:instance) { described_class.new }

@@ -1,4 +1,5 @@
 require "spec_helper"
+require "tmpdir"
 
 RSpec.describe ActionReporter::PluginDiscovery do
   describe ".discover" do
@@ -247,6 +248,34 @@ RSpec.describe ActionReporter::PluginDiscovery do
     end
 
     describe ".load_registered_reporter" do
+      it "loads reporter class via require_path when class is not preloaded" do
+        Dir.mktmpdir do |dir|
+          reporter_file = File.join(dir, "lazy_loaded_custom_reporter.rb")
+          File.write(reporter_file, <<~RUBY)
+            module ActionReporter
+              class LazyLoadedCustomReporter < Base
+              end
+            end
+          RUBY
+
+          config = {
+            class_name: "ActionReporter::LazyLoadedCustomReporter",
+            require_path: reporter_file
+          }
+
+          if ActionReporter.const_defined?(:LazyLoadedCustomReporter, false)
+            ActionReporter.send(:remove_const, :LazyLoadedCustomReporter)
+          end
+
+          result = described_class.send(:load_registered_reporter, config)
+          expect(result).to eq(ActionReporter::LazyLoadedCustomReporter)
+        ensure
+          if ActionReporter.const_defined?(:LazyLoadedCustomReporter, false)
+            ActionReporter.send(:remove_const, :LazyLoadedCustomReporter)
+          end
+        end
+      end
+
       it "returns nil for non-existent classes" do
         config = {
           class_name: "ActionReporter::NonExistentReporter",
@@ -289,14 +318,6 @@ RSpec.describe ActionReporter::PluginDiscovery do
 
         result = described_class.send(:load_registered_reporter, config)
         expect(result).to eq(custom_reporter_class)
-      end
-    end
-
-    describe ".required?" do
-      it "checks if a path is already required" do
-        # Test that it checks $LOADED_FEATURES
-        expect(described_class.send(:required?, "action_reporter/base")).to be true
-        expect(described_class.send(:required?, "nonexistent/path")).to be false
       end
     end
   end

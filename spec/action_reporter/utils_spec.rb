@@ -70,6 +70,16 @@ RSpec.describe ActionReporter::Utils do
         })
       end
 
+      it "transforms objects nested directly in arrays" do
+        hash = {
+          users: [user, user]
+        }
+        result = described_class.deep_transform_values(hash) { |v| v.respond_to?(:to_global_id) ? v.to_global_id.to_s : v }
+        expect(result).to eq({
+          users: ["gid://user/1", "gid://user/1"]
+        })
+      end
+
       it "transforms nested array hash values" do
         hash = {
           items: [
