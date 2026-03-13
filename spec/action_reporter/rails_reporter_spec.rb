@@ -5,6 +5,7 @@ RSpec.describe ActionReporter::RailsReporter do
   subject(:instance) { described_class.new }
 
   let(:logger_stub) { instance_double("Logger") }
+
   before do
     Rails.logger = logger_stub
   end
@@ -27,6 +28,7 @@ RSpec.describe ActionReporter::RailsReporter do
 
   describe "#transform_context" do
     subject(:transform_context) { described_class.new.transform_context(context) }
+
     let(:context) { {foo: "bar"} }
 
     it "returns context" do
@@ -44,6 +46,7 @@ RSpec.describe ActionReporter::RailsReporter do
     context "when context contains ActiveRecord object" do
       let(:context) { {foo: "bar", user: user} }
       let(:user) { double("User", to_global_id: "gid://user/1") }
+
       it "returns context with global id" do
         expect(subject).to eq({foo: "bar", user: "gid://user/1"})
       end

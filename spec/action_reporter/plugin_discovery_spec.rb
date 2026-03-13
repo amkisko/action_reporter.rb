@@ -15,14 +15,13 @@ RSpec.describe ActionReporter::PluginDiscovery do
       expect(reporters).to include(ActionReporter::ScoutApmReporter)
       expect(reporters).to include(ActionReporter::AuditedReporter)
       expect(reporters).to include(ActionReporter::PaperTrailReporter)
+      expect(reporters).to include(ActionReporter::ActiveVersionReporter)
     end
 
     it "only includes classes that inherit from Base" do
       reporters = described_class.discover
 
-      reporters.each do |reporter|
-        expect(reporter).to be < ActionReporter::Base
-      end
+      expect(reporters).to all(be < ActionReporter::Base)
     end
 
     it "caches results" do
@@ -54,9 +53,7 @@ RSpec.describe ActionReporter::PluginDiscovery do
       reporters = described_class.discover
 
       # All discovered reporters should be valid
-      reporters.each do |reporter|
-        expect(reporter).to be < ActionReporter::Base
-      end
+      expect(reporters).to all(be < ActionReporter::Base)
     end
 
     it "handles discovery errors gracefully" do
