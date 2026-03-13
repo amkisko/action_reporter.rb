@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Unreleased
+## 2.0.2 (2026-03-13)
 
 - Add `ActiveVersionReporter` integration for the `active_version` gem
   - Support context propagation via `ActiveVersion.context`
