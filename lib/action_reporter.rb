@@ -12,6 +12,7 @@ require "action_reporter/sentry_reporter"
 require "action_reporter/scout_apm_reporter"
 require "action_reporter/audited_reporter"
 require "action_reporter/paper_trail_reporter"
+require "action_reporter/active_version_reporter"
 
 module ActionReporter
   module_function
@@ -24,7 +25,8 @@ module ActionReporter
     ActionReporter::SentryReporter,
     ActionReporter::ScoutApmReporter,
     ActionReporter::AuditedReporter,
-    ActionReporter::PaperTrailReporter
+    ActionReporter::PaperTrailReporter,
+    ActionReporter::ActiveVersionReporter
   ].freeze
 
   # Get available reporters (auto-discovered + registered)
