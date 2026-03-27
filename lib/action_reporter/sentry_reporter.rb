@@ -23,11 +23,11 @@ module ActionReporter
     end
 
     def current_user=(user)
-      sentry_class.set_user(user_global_id: user&.to_global_id&.to_s)
+      sentry_class.set_user(id: user&.to_global_id&.to_s)
     end
 
     def transaction_id=(transaction_id)
-      sentry_class.set_tags(transactionId: transaction_id)
+      sentry_class.set_tags(transaction_id: transaction_id)
     end
 
     def transaction_name=(transaction_name)
