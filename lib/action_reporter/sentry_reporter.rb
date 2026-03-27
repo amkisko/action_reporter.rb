@@ -23,7 +23,8 @@ module ActionReporter
     end
 
     def current_user=(user)
-      sentry_class.set_user(id: user&.to_global_id&.to_s)
+      id = resolve_user_id(user)
+      sentry_class.set_user(id: id)
     end
 
     def transaction_id=(transaction_id)
@@ -34,6 +35,12 @@ module ActionReporter
       sentry_class.configure_scope do |scope|
         scope.set_transaction_name(transaction_name)
       end
+    end
+
+    private
+
+    def blank_user_id?(id)
+      id.nil? || (id.respond_to?(:empty?) && id.empty?)
     end
   end
 end
