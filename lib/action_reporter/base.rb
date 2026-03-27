@@ -48,5 +48,28 @@ module ActionReporter
 
     def transaction_name=(transaction_name)
     end
+
+    def resolve_user_id(user)
+      resolver = ActionReporter.user_id_resolver
+      if resolver.respond_to?(:call)
+        resolver.call(user)
+      else
+        default_resolve_user_id(user)
+      end
+    end
+
+    private
+
+    def default_resolve_user_id(user)
+      if defined?(::GlobalID) && user.is_a?(::GlobalID)
+        user.to_s
+      elsif defined?(::ActiveRecord::Base) && user.is_a?(::ActiveRecord::Base)
+        (user.try(:to_global_id) || user.try(:id)).to_s
+      elsif user.respond_to?(:to_global_id)
+        user.to_global_id.to_s
+      else
+        user.to_s
+      end
+    end
   end
 end

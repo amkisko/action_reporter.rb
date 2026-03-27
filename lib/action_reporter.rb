@@ -36,6 +36,7 @@ module ActionReporter
   @enabled_reporters = []
   @logger = nil
   @error_handler = nil
+  @user_id_resolver = nil
 
   def enabled_reporters=(reporters)
     @enabled_reporters = reporters || []
@@ -59,6 +60,18 @@ module ActionReporter
 
   def error_handler=(handler)
     @error_handler = handler
+  end
+
+  # Optional proc to turn +current_user+ into a string id for reporters (Sentry, Scout, etc.).
+  # Receives the same object passed to +ActionReporter.current_user=+ and must return a String
+  # (or +nil+ to skip setting an id, if the reporter supports it).
+  # When unset, {ActionReporter::Base#resolve_user_id} uses built-in defaults.
+  def user_id_resolver
+    @user_id_resolver
+  end
+
+  def user_id_resolver=(resolver)
+    @user_id_resolver = resolver
   end
 
   def handle_reporter_error(reporter, error, method_name)
