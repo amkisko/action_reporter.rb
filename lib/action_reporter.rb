@@ -33,7 +33,7 @@ module ActionReporter
     PluginDiscovery.register(name, class_name: class_name, require_path: require_path)
   end
 
-  @enabled_reporters = []
+  @enabled_reporters = nil
   @logger = nil
   @error_handler = nil
   @user_id_resolver = nil

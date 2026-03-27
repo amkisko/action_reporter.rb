@@ -7,7 +7,7 @@ RSpec.describe ActionReporter::PluginDiscovery do
       described_class.reset!
     end
 
-    it "discovers built-in reporters" do
+    it "discovers built-in reporters", :aggregate_failures do
       reporters = described_class.discover
 
       expect(reporters).to include(ActionReporter::RailsReporter)
@@ -37,7 +37,7 @@ RSpec.describe ActionReporter::PluginDiscovery do
       results = []
 
       10.times do
-        threads << Thread.new do
+        threads << Thread.new do # rubocop:disable ThreadSafety/NewThread -- intentional concurrency test
           results << described_class.discover
         end
       end
@@ -97,7 +97,7 @@ RSpec.describe ActionReporter::PluginDiscovery do
       described_class.instance_variable_set(:@registered_reporters, {})
     end
 
-    it "includes discovered reporters" do
+    it "includes discovered reporters", :aggregate_failures do
       reporters = described_class.available_reporters
 
       expect(reporters).to include(ActionReporter::RailsReporter)
@@ -132,7 +132,7 @@ RSpec.describe ActionReporter::PluginDiscovery do
       expect(rails_count).to eq(1)
     end
 
-    it "handles registered reporters that don't exist" do
+    it "handles registered reporters that don't exist", :aggregate_failures do
       # Register a reporter with a non-existent class
       described_class.register(:nonexistent, class_name: "ActionReporter::NonExistentReporter", require_path: "action_reporter/nonexistent_reporter")
 
@@ -212,7 +212,7 @@ RSpec.describe ActionReporter::PluginDiscovery do
   end
 
   describe ".reset!" do
-    it "clears the discovery cache" do
+    it "clears the discovery cache", :aggregate_failures do
       first_discovery = described_class.discover
       described_class.reset!
       second_discovery = described_class.discover
@@ -264,14 +264,14 @@ RSpec.describe ActionReporter::PluginDiscovery do
           }
 
           if ActionReporter.const_defined?(:LazyLoadedCustomReporter, false)
-            ActionReporter.send(:remove_const, :LazyLoadedCustomReporter)
+            stub_const("ActionReporter::LazyLoadedCustomReporter", nil)
           end
 
           result = described_class.send(:load_registered_reporter, config)
           expect(result).to eq(ActionReporter::LazyLoadedCustomReporter)
         ensure
           if ActionReporter.const_defined?(:LazyLoadedCustomReporter, false)
-            ActionReporter.send(:remove_const, :LazyLoadedCustomReporter)
+            stub_const("ActionReporter::LazyLoadedCustomReporter", nil)
           end
         end
       end
@@ -321,34 +321,34 @@ RSpec.describe ActionReporter::PluginDiscovery do
       end
     end
   end
-end
 
-RSpec.describe ActionReporter do
-  describe ".available_reporters" do
-    it "returns discovered reporters" do
-      reporters = described_class.available_reporters
+  describe ActionReporter do
+    describe ".available_reporters" do
+      it "returns discovered reporters", :aggregate_failures do
+        reporters = described_class.available_reporters
 
-      expect(reporters).to be_an(Array)
-      expect(reporters).not_to be_empty
-      expect(reporters).to include(ActionReporter::RailsReporter)
+        expect(reporters).to be_an(Array)
+        expect(reporters).not_to be_empty
+        expect(reporters).to include(ActionReporter::RailsReporter)
+      end
+
+      it "does not block application boot" do
+        # This should return immediately without requiring files
+        expect { described_class.available_reporters }.not_to raise_error
+      end
     end
 
-    it "does not block application boot" do
-      # This should return immediately without requiring files
-      expect { described_class.available_reporters }.not_to raise_error
-    end
-  end
+    describe ".register_reporter" do
+      before do
+        ActionReporter::PluginDiscovery.instance_variable_set(:@registered_reporters, {})
+      end
 
-  describe ".register_reporter" do
-    before do
-      ActionReporter::PluginDiscovery.instance_variable_set(:@registered_reporters, {})
-    end
+      it "registers a custom reporter" do
+        described_class.register_reporter(:test, class_name: "ActionReporter::RailsReporter", require_path: "action_reporter/rails_reporter")
 
-    it "registers a custom reporter" do
-      described_class.register_reporter(:test, class_name: "ActionReporter::RailsReporter", require_path: "action_reporter/rails_reporter")
-
-      registered = ActionReporter::PluginDiscovery.instance_variable_get(:@registered_reporters)
-      expect(registered[:test]).not_to be_nil
+        registered = ActionReporter::PluginDiscovery.instance_variable_get(:@registered_reporters)
+        expect(registered[:test]).not_to be_nil
+      end
     end
   end
 end

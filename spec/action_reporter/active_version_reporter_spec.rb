@@ -74,16 +74,16 @@ RSpec.describe ActionReporter::ActiveVersionReporter do
       ActiveVersion::RequestStore.audited_user = nil
     end
 
-    it "sets audited_user in request store" do
+    it "sets audited_user in request store", :aggregate_failures do
       user = double("User", to_global_id: "gid://user/1")
-      expect(ActiveVersion::RequestStore.audited_user).to eq(nil)
+      expect(ActiveVersion::RequestStore.audited_user).to be_nil
       instance.current_user = user
       expect(ActiveVersion::RequestStore.audited_user).to eq(user)
     end
   end
 
   describe "#reset_context" do
-    it "resets request store and context" do
+    it "resets request store and context", :aggregate_failures do
       ActiveVersion::RequestStore.request_uuid = "123-456-789"
       ActiveVersion::RequestStore.remote_address = "192.168.1.1"
       ActiveVersion::RequestStore.audited_user = double("User")

@@ -30,7 +30,7 @@ module ActionReporter
   end
 end
 
-RSpec.describe "Custom Reporter Example (Datadog)" do
+RSpec.describe ActionReporter::DatadogReporter do
   before do
     ActionReporter::PluginDiscovery.reset!
     ActionReporter::PluginDiscovery.instance_variable_set(:@registered_reporters, {})
@@ -49,7 +49,7 @@ RSpec.describe "Custom Reporter Example (Datadog)" do
 
       # Step 3: The reporter is now available
       available = ActionReporter.available_reporters
-      expect(available).to include(ActionReporter::DatadogReporter)
+      expect(available).to include(described_class)
     end
 
     it "allows using the custom reporter" do
@@ -59,14 +59,14 @@ RSpec.describe "Custom Reporter Example (Datadog)" do
         require_path: "reporters/datadog_reporter")
 
       # Create and use the reporter
-      datadog_reporter = ActionReporter::DatadogReporter.new(api_key: "test-key", service: "myapp")
+      datadog_reporter = described_class.new(api_key: "test-key", service: "myapp")
       ActionReporter.enabled_reporters = [datadog_reporter]
 
       # Use it
       expect { ActionReporter.notify("Test error", context: {foo: "bar"}) }.not_to raise_error
     end
 
-    it "includes custom reporters in available_reporters" do
+    it "includes custom reporters in available_reporters", :aggregate_failures do
       ActionReporter.register_reporter(:datadog,
         class_name: "ActionReporter::DatadogReporter",
         require_path: "reporters/datadog_reporter")
@@ -75,10 +75,10 @@ RSpec.describe "Custom Reporter Example (Datadog)" do
 
       # Should include both built-in and custom reporters
       expect(available).to include(ActionReporter::RailsReporter) # Built-in
-      expect(available).to include(ActionReporter::DatadogReporter) # Custom
+      expect(available).to include(described_class) # Custom
     end
 
-    it "works with multiple custom reporters" do
+    it "works with multiple custom reporters", :aggregate_failures do
       # Register multiple custom reporters
       ActionReporter.register_reporter(:datadog,
         class_name: "ActionReporter::DatadogReporter",
@@ -97,7 +97,7 @@ RSpec.describe "Custom Reporter Example (Datadog)" do
         require_path: "action_reporter/rails_reporter") # Using existing path for test
 
       available = ActionReporter.available_reporters
-      expect(available).to include(ActionReporter::DatadogReporter)
+      expect(available).to include(described_class)
       expect(available).to include(custom_reporter_class)
     end
   end
@@ -113,7 +113,7 @@ RSpec.describe "Custom Reporter Example (Datadog)" do
       # )
 
       # 2. Configure enabled reporters
-      datadog_reporter = ActionReporter::DatadogReporter.new(api_key: ENV["DATADOG_API_KEY"])
+      datadog_reporter = described_class.new(api_key: ENV["DATADOG_API_KEY"])
       ActionReporter.enabled_reporters = [
         ActionReporter::RailsReporter.new,
         datadog_reporter

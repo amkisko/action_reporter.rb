@@ -11,53 +11,53 @@ RSpec.describe ActionReporter::HoneybadgerReporter do
   end
 
   describe "#notify" do
-    subject(:notify) { instance.notify(error, context: context_data) }
-
     let(:error) { StandardError.new("error") }
     let(:context_data) { {foo: "bar"} }
 
     it "captures error" do
-      expect(Honeybadger).to receive(:notify).with(error, {context: context_data}).and_call_original
-      subject
+      allow(Honeybadger).to receive(:notify).and_call_original
+      instance.notify(error, context: context_data)
+      expect(Honeybadger).to have_received(:notify).with(error, {context: context_data})
     end
   end
 
   describe "#context" do
-    subject(:context) { instance.context(context_data) }
-
     let(:context_data) { {foo: "bar"} }
 
     it "sets context" do
-      expect(Honeybadger).to receive(:context).with(context_data).and_call_original
-      subject
+      allow(Honeybadger).to receive(:context).and_call_original
+      instance.context(context_data)
+      expect(Honeybadger).to have_received(:context).with(context_data)
     end
 
     it "transforms context" do
-      expect(instance).to receive(:transform_context).with(context_data).and_call_original
-      subject
+      gid = double("GlobalId", to_s: "gid://app/User/1")
+      user = double("User", to_global_id: gid)
+      nested = {foo: "bar", user: user}
+      allow(Honeybadger).to receive(:context).and_call_original
+      instance.context(nested)
+      expect(Honeybadger).to have_received(:context).with(foo: "bar", user: "gid://app/User/1")
     end
   end
 
   describe "#reset_context" do
-    subject(:reset_context) { instance.reset_context }
-
     let(:new_context) { {foo: "bar"} }
 
     before do
+      Honeybadger.context.clear!
       Honeybadger.context(new_context)
     end
 
-    it "resets context" do
+    it "resets context", :aggregate_failures do
       expect(Honeybadger.get_context).to eq(new_context)
-      expect(Honeybadger.context).to receive(:clear!).and_call_original
-      subject
-      expect(Honeybadger.get_context).to eq(nil)
+      allow(Honeybadger.context).to receive(:clear!).and_call_original
+      instance.reset_context
+      expect(Honeybadger.context).to have_received(:clear!)
+      expect(Honeybadger.get_context).to be_nil
     end
   end
 
   describe "#current_user=" do
-    subject(:current_user=) { instance.current_user = user }
-
     after do
       ActionReporter.user_id_resolver = nil
     end
@@ -66,34 +66,32 @@ RSpec.describe ActionReporter::HoneybadgerReporter do
     let(:user) { double("User", to_global_id: sample_id) }
 
     it "sets user_id from resolve_user_id" do
-      expect(Honeybadger).to receive(:context).with(user_id: sample_id.to_s).and_call_original
-      subject
+      allow(Honeybadger).to receive(:context).and_call_original
+      instance.current_user = user
+      expect(Honeybadger).to have_received(:context).with(user_id: sample_id.to_s)
     end
 
     context "when user is nil" do
       let(:user) { nil }
 
       it "sets empty user_id" do
-        expect(Honeybadger).to receive(:context).with(user_id: "").and_call_original
-        subject
+        allow(Honeybadger).to receive(:context).and_call_original
+        instance.current_user = user
+        expect(Honeybadger).to have_received(:context).with(user_id: "")
       end
     end
 
     context "when ActionReporter.user_id_resolver is set" do
       it "uses resolved id" do
         ActionReporter.user_id_resolver = ->(_) { "custom-user-id" }
-        expect(Honeybadger).to receive(:context).with(user_id: "custom-user-id").and_call_original
+        allow(Honeybadger).to receive(:context).and_call_original
         instance.current_user = user
+        expect(Honeybadger).to have_received(:context).with(user_id: "custom-user-id")
       end
     end
   end
 
   describe "#check_in" do
-    subject(:check_in) { instance.check_in(identifier) }
-
-    context "when identifier is a string" do
-    end
-
     context "when identifier is a class" do
       let(:reporter_check_in) { "reporter_check_in_test" }
       let(:identifier) { double("User", reporter_check_in: reporter_check_in) }
@@ -103,8 +101,9 @@ RSpec.describe ActionReporter::HoneybadgerReporter do
       end
 
       it "returns identifier" do
-        expect(Honeybadger).to receive(:check_in).with(reporter_check_in).and_call_original
-        subject
+        allow(Honeybadger).to receive(:check_in).and_call_original
+        instance.check_in(identifier)
+        expect(Honeybadger).to have_received(:check_in).with(reporter_check_in)
       end
     end
   end

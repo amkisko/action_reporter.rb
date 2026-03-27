@@ -17,12 +17,12 @@ class FailingReporter < ActionReporter::Base
   end
 end
 
-RSpec.describe "ActionReporter performance" do
+RSpec.describe ActionReporter, :performance do
   before do
-    ActionReporter.enabled_reporters = []
-    ActionReporter.reset_context
-    ActionReporter.logger = nil
-    ActionReporter.error_handler = nil
+    described_class.enabled_reporters = []
+    described_class.reset_context
+    described_class.logger = nil
+    described_class.error_handler = nil
   end
 
   def measure_wall_time(iterations = 10_000)
@@ -68,12 +68,12 @@ RSpec.describe "ActionReporter performance" do
 
     # Test with 0, 1, 3, 5, 7, and 10 reporters
     [0, 1, 3, 5, 7, 10].each do |count|
-      ActionReporter.enabled_reporters = Array.new(count) { NoopReporter.new }
+      described_class.enabled_reporters = Array.new(count) { NoopReporter.new }
       time = measure_wall_time(iterations) do |n|
         n.times do
-          ActionReporter.context(ctx)
-          ActionReporter.notify(error, context: ctx)
-          ActionReporter.reset_context
+          described_class.context(ctx)
+          described_class.notify(error, context: ctx)
+          described_class.reset_context
         end
       end
       results[count] = time
@@ -96,12 +96,12 @@ RSpec.describe "ActionReporter performance" do
     # Measure memory allocation
     memory_results = {}
     [0, 1, 3, 5, 7, 10].each do |count|
-      ActionReporter.enabled_reporters = Array.new(count) { NoopReporter.new }
+      described_class.enabled_reporters = Array.new(count) { NoopReporter.new }
       mem = measure_memory(iterations) do |n|
         n.times do
-          ActionReporter.context(ctx)
-          ActionReporter.notify(error, context: ctx)
-          ActionReporter.reset_context
+          described_class.context(ctx)
+          described_class.notify(error, context: ctx)
+          described_class.reset_context
         end
       end
       memory_results[count] = mem
@@ -118,15 +118,15 @@ RSpec.describe "ActionReporter performance" do
   it "benchmarks error path overhead (wall-time)" do
     error = StandardError.new("error")
     ctx = {foo: "bar"}
-    ActionReporter.enabled_reporters = [FailingReporter.new]
+    described_class.enabled_reporters = [FailingReporter.new]
 
     # Ensure no leaked logger/error_handler doubles from other examples
-    allow(ActionReporter).to receive(:logger).and_return(nil)
-    ActionReporter.error_handler = nil
+    allow(described_class).to receive(:logger).and_return(nil)
+    described_class.error_handler = nil
 
     t = measure_wall_time(2_000) do |n|
       n.times do
-        ActionReporter.notify(error, context: ctx)
+        described_class.notify(error, context: ctx)
       end
     end
 
@@ -147,7 +147,7 @@ RSpec.describe "ActionReporter performance" do
         ip: "192.168.1.1",
         user_agent: "Mozilla/5.0",
         params: {action: "index", controller: "users"},
-        metadata: {timestamp: Time.now.to_i, version: "1.0"}
+        metadata: {timestamp: 1_700_000_000, version: "1.0"}
       },
       large: {
         user_id: 123,
@@ -155,9 +155,9 @@ RSpec.describe "ActionReporter performance" do
         ip: "192.168.1.1",
         user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
         params: {action: "index", controller: "users", filter: "active", page: 1},
-        metadata: {timestamp: Time.now.to_i, version: "1.0", environment: "production"},
+        metadata: {timestamp: 1_700_000_000, version: "1.0", environment: "production"},
         nested: {
-          session: {id: "abc123", created_at: Time.now},
+          session: {id: "abc123", created_at: 1_700_000_000},
           headers: {"X-Request-ID" => "req-123", "X-User-ID" => "123"},
           tags: %w[api v1 authenticated]
         }
@@ -167,12 +167,12 @@ RSpec.describe "ActionReporter performance" do
     memory_results = {}
 
     contexts.each do |size, ctx|
-      ActionReporter.enabled_reporters = [NoopReporter.new]
+      described_class.enabled_reporters = [NoopReporter.new]
       mem = measure_memory(iterations) do |n|
         n.times do
-          ActionReporter.context(ctx)
-          ActionReporter.notify(error, context: ctx)
-          ActionReporter.reset_context
+          described_class.context(ctx)
+          described_class.notify(error, context: ctx)
+          described_class.reset_context
         end
       end
       memory_results[size] = mem

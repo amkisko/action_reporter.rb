@@ -5,7 +5,7 @@ require "action_reporter/rails_reporter"
 RSpec.describe ActionReporter::RailsReporter do
   subject(:instance) { described_class.new }
 
-  let(:logger_stub) { instance_double("Logger") }
+  let(:logger_stub) { instance_double(Logger) }
 
   before do
     Rails.logger = logger_stub
@@ -13,34 +13,36 @@ RSpec.describe ActionReporter::RailsReporter do
 
   describe "#notify" do
     it "prints notification" do
-      expect(logger_stub).to receive(:info).with(
+      allow(logger_stub).to receive(:info)
+      instance.notify("error", context: {foo: "bar"})
+      expect(logger_stub).to have_received(:info).with(
         match(/Reporter notification: "error", \{(:foo=>|foo: )"bar"\}/)
       )
-      subject.notify("error", context: {foo: "bar"})
     end
   end
 
   describe "#context" do
     it "prints context" do
-      expect(logger_stub).to receive(:info).with(match(/Reporter context: \{(:foo=>|foo: )"bar"\}/))
-      subject.context({foo: "bar"})
+      allow(logger_stub).to receive(:info)
+      instance.context({foo: "bar"})
+      expect(logger_stub).to have_received(:info).with(match(/Reporter context: \{(:foo=>|foo: )"bar"\}/))
     end
   end
 
   describe "#transform_context" do
-    subject(:transform_context) { described_class.new.transform_context(context) }
+    subject(:transformed_context) { described_class.new.transform_context(context) }
 
     let(:context) { {foo: "bar"} }
 
     it "returns context" do
-      expect(subject).to eq(context)
+      expect(transformed_context).to eq(context)
     end
 
     context "when context contains current_user" do
       let(:context) { {foo: "bar", current_user: "user"} }
 
       it "returns context without current_user" do
-        expect(subject).to eq({current_user: "user", foo: "bar"})
+        expect(transformed_context).to eq({current_user: "user", foo: "bar"})
       end
     end
 
@@ -49,14 +51,14 @@ RSpec.describe ActionReporter::RailsReporter do
       let(:user) { double("User", to_global_id: "gid://user/1") }
 
       it "returns context with global id" do
-        expect(subject).to eq({foo: "bar", user: "gid://user/1"})
+        expect(transformed_context).to eq({foo: "bar", user: "gid://user/1"})
       end
     end
   end
 
   describe "#reset_context" do
     it "does nothing" do
-      expect { subject.reset_context }.not_to raise_error
+      expect { instance.reset_context }.not_to raise_error
     end
   end
 
@@ -64,16 +66,18 @@ RSpec.describe ActionReporter::RailsReporter do
     let(:identifier) { double("Identifier", reporter_check_in: "check-in-id") }
 
     it "resolves check_in id and logs it" do
-      expect(logger_stub).to receive(:info).with("Reporter check-in: check-in-id")
-      subject.check_in(identifier)
+      allow(logger_stub).to receive(:info)
+      instance.check_in(identifier)
+      expect(logger_stub).to have_received(:info).with("Reporter check-in: check-in-id")
     end
 
     context "when identifier is a string" do
       let(:identifier) { "check-in-id" }
 
       it "logs the string" do
-        expect(logger_stub).to receive(:info).with("Reporter check-in: check-in-id")
-        subject.check_in(identifier)
+        allow(logger_stub).to receive(:info)
+        instance.check_in(identifier)
+        expect(logger_stub).to have_received(:info).with("Reporter check-in: check-in-id")
       end
     end
   end

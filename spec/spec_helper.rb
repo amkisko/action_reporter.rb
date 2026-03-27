@@ -3,6 +3,7 @@ require "simplecov-cobertura"
 require "simplecov_json_formatter"
 
 SimpleCov.start do
+  minimum_coverage 95
   track_files "{lib,app}/**/*.rb"
   add_filter "/lib/tasks/"
   formatter SimpleCov::Formatter::MultiFormatter.new([
