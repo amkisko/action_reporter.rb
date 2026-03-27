@@ -18,8 +18,6 @@ module ActionReporter
     end
 
     def current_user=(user)
-      return if user.nil?
-
       id = resolve_user_id(user)
       scoutapm_context_class.add_user(id: id)
     end
