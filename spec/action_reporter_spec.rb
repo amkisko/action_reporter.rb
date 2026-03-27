@@ -317,6 +317,23 @@ RSpec.describe ActionReporter do
     end
   end
 
+  describe ".user_id_resolver" do
+    after do
+      described_class.user_id_resolver = nil
+    end
+
+    it "returns nil initially" do
+      described_class.user_id_resolver = nil
+      expect(described_class.user_id_resolver).to be_nil
+    end
+
+    it "returns set resolver" do
+      resolver = ->(user) { user.to_s }
+      described_class.user_id_resolver = resolver
+      expect(described_class.user_id_resolver).to eq(resolver)
+    end
+  end
+
   describe ".enabled_reporters=" do
     it "handles nil gracefully" do
       described_class.enabled_reporters = nil

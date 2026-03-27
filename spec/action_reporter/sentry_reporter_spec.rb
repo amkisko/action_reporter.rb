@@ -62,12 +62,33 @@ RSpec.describe ActionReporter::SentryReporter do
   describe "#current_user=" do
     subject(:current_user=) { instance.current_user = user }
 
+    after do
+      ActionReporter.user_id_resolver = nil
+    end
+
     let(:sample_id) { double("GlobalId", to_s: "user-global-id") }
     let(:user) { double("User", to_global_id: sample_id) }
 
-    it "sets user_global_id" do
-      expect(Sentry).to receive(:set_user).with(user_global_id: sample_id.to_s).and_call_original
+    it "sets user id" do
+      expect(Sentry).to receive(:set_user).with(id: sample_id.to_s).and_call_original
       subject
+    end
+
+    context "when user is nil" do
+      let(:user) { nil }
+
+      it "sets empty user id" do
+        expect(Sentry).to receive(:set_user).with(id: "").and_call_original
+        subject
+      end
+    end
+
+    context "when ActionReporter.user_id_resolver is set" do
+      it "uses resolved id" do
+        ActionReporter.user_id_resolver = ->(_) { "custom-user-id" }
+        expect(Sentry).to receive(:set_user).with(id: "custom-user-id").and_call_original
+        instance.current_user = user
+      end
     end
   end
 
@@ -76,8 +97,8 @@ RSpec.describe ActionReporter::SentryReporter do
 
     let(:transaction_id) { "txn-123" }
 
-    it "sets transactionId tag" do
-      expect(Sentry).to receive(:set_tags).with(transactionId: transaction_id).and_call_original
+    it "sets transaction_id tag" do
+      expect(Sentry).to receive(:set_tags).with(transaction_id: transaction_id).and_call_original
       subject
     end
   end
