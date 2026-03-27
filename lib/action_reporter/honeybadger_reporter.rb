@@ -22,10 +22,8 @@ module ActionReporter
     end
 
     def current_user=(user)
-      return unless user
-
       id = resolve_user_id(user)
-      honeybadger_class.context(user_id: id) if id && !id.to_s.empty?
+      honeybadger_class.context(user_id: id)
     end
   end
 end
