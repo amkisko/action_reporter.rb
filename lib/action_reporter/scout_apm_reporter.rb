@@ -18,7 +18,10 @@ module ActionReporter
     end
 
     def current_user=(user)
-      scoutapm_context_class.add_user(id: user&.to_global_id&.to_s)
+      return if user.nil?
+
+      id = resolve_user_id(user)
+      scoutapm_context_class.add_user(id: id)
     end
 
     def ignore_transaction!
