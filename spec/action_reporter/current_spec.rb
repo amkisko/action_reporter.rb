@@ -92,7 +92,7 @@ RSpec.describe ActionReporter::Current do
   end
 
   describe ".reset" do
-    it "resets all attributes" do
+    it "resets all attributes", :aggregate_failures do
       described_class.current_user = double("User")
       described_class.current_request_uuid = "123-456"
       described_class.current_remote_addr = "192.168.1.1"
@@ -110,7 +110,7 @@ RSpec.describe ActionReporter::Current do
   end
 
   describe "execution state storage" do
-    it "uses configured storage_adapter when provided" do
+    it "uses configured storage_adapter when provided", :aggregate_failures do
       adapter = Class.new do
         class << self
           def [](key)
@@ -142,7 +142,7 @@ RSpec.describe ActionReporter::Current do
       }.to raise_error(ArgumentError, "storage_adapter must respond to #[] and #[]=")
     end
 
-    it "uses ActiveSupport::IsolatedExecutionState when available" do
+    it "uses ActiveSupport::IsolatedExecutionState when available", :aggregate_failures do
       active_support_module = defined?(ActiveSupport) ? ActiveSupport : Module.new
       fake_state = Class.new do
         class << self
@@ -171,7 +171,7 @@ RSpec.describe ActionReporter::Current do
       expect(fake_state[:action_reporter_current_user]).to eq("isolated-user")
     end
 
-    it "prefers configured storage_adapter over ActiveSupport::IsolatedExecutionState" do
+    it "prefers configured storage_adapter over ActiveSupport::IsolatedExecutionState", :aggregate_failures do
       active_support_module = defined?(ActiveSupport) ? ActiveSupport : Module.new
       fake_state = Class.new do
         class << self

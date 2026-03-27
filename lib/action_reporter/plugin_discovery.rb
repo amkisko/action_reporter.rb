@@ -6,7 +6,7 @@ module ActionReporter
   module PluginDiscovery
     class << self
       # Initialize class instance variables
-      @registered_reporters = {}
+      @registered_reporters = nil
       @discovered_reporters = nil
       @discovery_lock = Mutex.new
 

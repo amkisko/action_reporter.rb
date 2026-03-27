@@ -4,7 +4,7 @@ RSpec.describe ActionReporter::Base do
   subject(:instance) { described_class.new }
 
   describe ".class_accessor" do
-    let(:test_class) { Class.new(ActionReporter::Base) }
+    let(:test_class) { Class.new(described_class) }
 
     before do
       test_class.class_accessor "NonExistent", gem_spec: "nonexistent (~> 1.0)"

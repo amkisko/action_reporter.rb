@@ -15,7 +15,7 @@ RSpec.describe ActionReporter do
     end
 
     it "returns enabled reporters" do
-      expect(subject).to eq([])
+      expect(enabled_reporters).to eq([])
     end
 
     context "when Rails is defined" do
@@ -28,7 +28,7 @@ RSpec.describe ActionReporter do
       end
 
       it "returns enabled reporters" do
-        expect(subject).to eq([rails_reporter])
+        expect(enabled_reporters).to eq([rails_reporter])
       end
     end
   end
@@ -42,16 +42,20 @@ RSpec.describe ActionReporter do
       described_class.enabled_reporters = [reporter]
     end
 
-    it "calls notify on enabled reporters" do
-      expect(reporter).to receive(:respond_to?).with(:notify).and_return(true)
-      expect(reporter).to receive(:notify).with(error, context: context_data)
+    it "calls notify on enabled reporters", :aggregate_failures do
+      allow(reporter).to receive(:respond_to?).with(:notify).and_return(true)
+      allow(reporter).to receive(:notify)
       described_class.notify(error, context: context_data)
+      expect(reporter).to have_received(:respond_to?).with(:notify)
+      expect(reporter).to have_received(:notify).with(error, context: context_data)
     end
 
-    it "skips reporters that don't respond to notify" do
-      expect(reporter).to receive(:respond_to?).with(:notify).and_return(false)
-      expect(reporter).not_to receive(:notify)
+    it "skips reporters that don't respond to notify", :aggregate_failures do
+      allow(reporter).to receive(:respond_to?).with(:notify).and_return(false)
+      allow(reporter).to receive(:notify)
       described_class.notify(error, context: context_data)
+      expect(reporter).to have_received(:respond_to?).with(:notify)
+      expect(reporter).not_to have_received(:notify)
     end
   end
 
@@ -63,19 +67,23 @@ RSpec.describe ActionReporter do
       described_class.enabled_reporters = [reporter]
     end
 
-    it "calls context on enabled reporters" do
-      expect(reporter).to receive(:respond_to?).with(:context).and_return(true)
-      expect(reporter).to receive(:context).with(context_data)
+    it "calls context on enabled reporters", :aggregate_failures do
+      allow(reporter).to receive(:respond_to?).with(:context).and_return(true)
+      allow(reporter).to receive(:context)
       described_class.context(context_data)
+      expect(reporter).to have_received(:respond_to?).with(:context)
+      expect(reporter).to have_received(:context).with(context_data)
     end
 
-    it "skips reporters that don't respond to context" do
-      expect(reporter).to receive(:respond_to?).with(:context).and_return(false)
-      expect(reporter).not_to receive(:context)
+    it "skips reporters that don't respond to context", :aggregate_failures do
+      allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
+      allow(reporter).to receive(:context)
       described_class.context(context_data)
+      expect(reporter).to have_received(:respond_to?).with(:context)
+      expect(reporter).not_to have_received(:context)
     end
 
-    it "raises ArgumentError when context is not a Hash" do
+    it "raises ArgumentError when context is not a Hash", :aggregate_failures do
       expect {
         described_class.context("not a hash")
       }.to raise_error(ArgumentError, "context must be a Hash")
@@ -98,19 +106,23 @@ RSpec.describe ActionReporter do
       described_class.reset_context # Ensure clean state
     end
 
-    it "calls reset_context on enabled reporters" do
-      expect(reporter).to receive(:respond_to?).with(:reset_context).and_return(true)
-      expect(reporter).to receive(:reset_context)
+    it "calls reset_context on enabled reporters", :aggregate_failures do
+      allow(reporter).to receive(:respond_to?).with(:reset_context).and_return(true)
+      allow(reporter).to receive(:reset_context)
       described_class.reset_context
+      expect(reporter).to have_received(:respond_to?).with(:reset_context)
+      expect(reporter).to have_received(:reset_context)
     end
 
-    it "skips reporters that don't respond to reset_context" do
-      expect(reporter).to receive(:respond_to?).with(:reset_context).and_return(false)
-      expect(reporter).not_to receive(:reset_context)
+    it "skips reporters that don't respond to reset_context", :aggregate_failures do
+      allow(reporter).to receive(:respond_to?).with(:reset_context).and_return(false)
+      allow(reporter).to receive(:reset_context)
       described_class.reset_context
+      expect(reporter).to have_received(:respond_to?).with(:reset_context)
+      expect(reporter).not_to have_received(:reset_context)
     end
 
-    it "resets instance attributes" do
+    it "resets instance attributes", :aggregate_failures do
       user = double("User")
       uuid = "123-456-789"
       addr = "192.168.1.1"
@@ -147,16 +159,20 @@ RSpec.describe ActionReporter do
       described_class.enabled_reporters = [reporter]
     end
 
-    it "calls check_in on enabled reporters" do
-      expect(reporter).to receive(:respond_to?).with(:check_in).and_return(true)
-      expect(reporter).to receive(:check_in).with(identifier)
+    it "calls check_in on enabled reporters", :aggregate_failures do
+      allow(reporter).to receive(:respond_to?).with(:check_in).and_return(true)
+      allow(reporter).to receive(:check_in)
       described_class.check_in(identifier)
+      expect(reporter).to have_received(:respond_to?).with(:check_in)
+      expect(reporter).to have_received(:check_in).with(identifier)
     end
 
-    it "skips reporters that don't respond to check_in" do
-      expect(reporter).to receive(:respond_to?).with(:check_in).and_return(false)
-      expect(reporter).not_to receive(:check_in)
+    it "skips reporters that don't respond to check_in", :aggregate_failures do
+      allow(reporter).to receive(:respond_to?).with(:check_in).and_return(false)
+      allow(reporter).to receive(:check_in)
       described_class.check_in(identifier)
+      expect(reporter).to have_received(:respond_to?).with(:check_in)
+      expect(reporter).not_to have_received(:check_in)
     end
   end
 
@@ -183,11 +199,13 @@ RSpec.describe ActionReporter do
         described_class.enabled_reporters = [reporter]
       end
 
-      it "sets current_request_uuid on reporters" do
+      it "sets current_request_uuid on reporters", :aggregate_failures do
         uuid = "123-456-789"
-        expect(reporter).to receive(:respond_to?).with(:current_request_uuid=).and_return(true)
-        expect(reporter).to receive(:current_request_uuid=).with(uuid)
+        allow(reporter).to receive(:respond_to?).with(:current_request_uuid=).and_return(true)
+        allow(reporter).to receive(:current_request_uuid=)
         described_class.current_request_uuid = uuid
+        expect(reporter).to have_received(:respond_to?).with(:current_request_uuid=)
+        expect(reporter).to have_received(:current_request_uuid=).with(uuid)
       end
     end
   end
@@ -215,11 +233,13 @@ RSpec.describe ActionReporter do
         described_class.enabled_reporters = [reporter]
       end
 
-      it "sets current_remote_addr on reporters" do
+      it "sets current_remote_addr on reporters", :aggregate_failures do
         addr = "192.168.1.1"
-        expect(reporter).to receive(:respond_to?).with(:current_remote_addr=).and_return(true)
-        expect(reporter).to receive(:current_remote_addr=).with(addr)
+        allow(reporter).to receive(:respond_to?).with(:current_remote_addr=).and_return(true)
+        allow(reporter).to receive(:current_remote_addr=)
         described_class.current_remote_addr = addr
+        expect(reporter).to have_received(:respond_to?).with(:current_remote_addr=)
+        expect(reporter).to have_received(:current_remote_addr=).with(addr)
       end
     end
   end
@@ -253,7 +273,7 @@ RSpec.describe ActionReporter do
         stub_const("Audited", audited_stub)
       end
 
-      it "returns current_user" do
+      it "returns current_user", :aggregate_failures do
         expect { described_class.current_user = new_user }.not_to raise_error
         expect(described_class.current_user).to eq(new_user)
       end
@@ -266,11 +286,13 @@ RSpec.describe ActionReporter do
         described_class.enabled_reporters = [reporter]
       end
 
-      it "sets current_user on reporters" do
+      it "sets current_user on reporters", :aggregate_failures do
         user = double("User")
-        expect(reporter).to receive(:respond_to?).with(:current_user=).and_return(true)
-        expect(reporter).to receive(:current_user=).with(user)
+        allow(reporter).to receive(:respond_to?).with(:current_user=).and_return(true)
+        allow(reporter).to receive(:current_user=)
         described_class.current_user = user
+        expect(reporter).to have_received(:respond_to?).with(:current_user=)
+        expect(reporter).to have_received(:current_user=).with(user)
       end
     end
   end
@@ -281,20 +303,10 @@ RSpec.describe ActionReporter do
     end
 
     it "returns nil when no logger is set and Rails is not available" do
-      # Temporarily hide Rails if it exists
-      rails_defined = defined?(Rails)
-      if rails_defined
-        rails_backup = Rails
-        Object.send(:remove_const, :Rails) if defined?(Rails)
+      if defined?(Rails)
+        stub_const("Rails", Object.new)
       end
-
-      begin
-        expect(described_class.logger).to be_nil
-      ensure
-        if rails_defined
-          Object.const_set(:Rails, rails_backup) if rails_backup
-        end
-      end
+      expect(described_class.logger).to be_nil
     end
 
     it "returns set logger" do
@@ -355,28 +367,30 @@ RSpec.describe ActionReporter do
         allow(logger).to receive(:debug)
       end
 
-      it "continues to other reporters when one fails" do
+      it "continues to other reporters when one fails", :aggregate_failures do
         allow(failing_reporter).to receive(:respond_to?).with(:notify).and_return(true)
         allow(failing_reporter).to receive(:notify).and_raise(StandardError.new("Reporter failed"))
         allow(working_reporter).to receive(:respond_to?).with(:notify).and_return(true)
-
-        expect(working_reporter).to receive(:notify).with(error, context: {})
-        expect(logger).to receive(:error).with(/ActionReporter: .*#notify failed/)
+        allow(working_reporter).to receive(:notify)
+        allow(logger).to receive(:error)
 
         described_class.notify(error, context: {})
+        expect(working_reporter).to have_received(:notify).with(error, context: {})
+        expect(logger).to have_received(:error).with(/ActionReporter: .*#notify failed/)
       end
 
-      it "logs error details when a reporter fails" do
+      it "logs error details when a reporter fails", :aggregate_failures do
         reporter_error = StandardError.new("Reporter failed")
         allow(failing_reporter).to receive(:respond_to?).with(:notify).and_return(true)
         allow(failing_reporter).to receive(:notify).and_raise(reporter_error)
         allow(working_reporter).to receive(:respond_to?).with(:notify).and_return(true)
         allow(working_reporter).to receive(:notify)
-
-        expect(logger).to receive(:error).with(/ActionReporter: .*#notify failed: StandardError - Reporter failed/)
-        expect(logger).to receive(:debug).with(anything)
+        allow(logger).to receive(:error)
+        allow(logger).to receive(:debug)
 
         described_class.notify(error, context: {})
+        expect(logger).to have_received(:error).with(/ActionReporter: .*#notify failed: StandardError - Reporter failed/)
+        expect(logger).to have_received(:debug).with(anything)
       end
     end
 
@@ -392,15 +406,16 @@ RSpec.describe ActionReporter do
         allow(logger).to receive(:debug)
       end
 
-      it "continues to other reporters when one fails" do
+      it "continues to other reporters when one fails", :aggregate_failures do
         allow(failing_reporter).to receive(:respond_to?).with(:context).and_return(true)
         allow(failing_reporter).to receive(:context).and_raise(StandardError.new("Reporter failed"))
         allow(working_reporter).to receive(:respond_to?).with(:context).and_return(true)
-
-        expect(working_reporter).to receive(:context).with({foo: "bar"})
-        expect(logger).to receive(:error).with(/ActionReporter: .*#context failed/)
+        allow(working_reporter).to receive(:context)
+        allow(logger).to receive(:error)
 
         described_class.context(foo: "bar")
+        expect(working_reporter).to have_received(:context).with({foo: "bar"})
+        expect(logger).to have_received(:error).with(/ActionReporter: .*#context failed/)
       end
     end
 
@@ -416,15 +431,16 @@ RSpec.describe ActionReporter do
         allow(logger).to receive(:debug)
       end
 
-      it "continues to other reporters when one fails" do
+      it "continues to other reporters when one fails", :aggregate_failures do
         allow(failing_reporter).to receive(:respond_to?).with(:check_in).and_return(true)
         allow(failing_reporter).to receive(:check_in).and_raise(StandardError.new("Reporter failed"))
         allow(working_reporter).to receive(:respond_to?).with(:check_in).and_return(true)
-
-        expect(working_reporter).to receive(:check_in).with("check-in-id")
-        expect(logger).to receive(:error).with(/ActionReporter: .*#check_in failed/)
+        allow(working_reporter).to receive(:check_in)
+        allow(logger).to receive(:error)
 
         described_class.check_in("check-in-id")
+        expect(working_reporter).to have_received(:check_in).with("check-in-id")
+        expect(logger).to have_received(:error).with(/ActionReporter: .*#check_in failed/)
       end
     end
 
@@ -445,20 +461,20 @@ RSpec.describe ActionReporter do
         allow(reporter).to receive(:respond_to?).with(:notify).and_return(true)
         allow(reporter).to receive(:notify).and_raise(StandardError.new("Reporter failed"))
         allow(error_handler).to receive(:respond_to?).with(:call).and_return(true)
-
-        expect(error_handler).to receive(:call).with(an_instance_of(StandardError), reporter, "notify")
+        allow(error_handler).to receive(:call)
 
         described_class.notify("error")
+        expect(error_handler).to have_received(:call).with(an_instance_of(StandardError), reporter, "notify")
       end
 
       it "skips error handler when it doesn't respond to call" do
         allow(reporter).to receive(:respond_to?).with(:notify).and_return(true)
         allow(reporter).to receive(:notify).and_raise(StandardError.new("Reporter failed"))
         allow(error_handler).to receive(:respond_to?).with(:call).and_return(false)
-
-        expect(error_handler).not_to receive(:call)
+        allow(error_handler).to receive(:call)
 
         described_class.notify("error")
+        expect(error_handler).not_to have_received(:call)
       end
 
       it "handles errors without backtrace" do
@@ -469,10 +485,10 @@ RSpec.describe ActionReporter do
         allow(reporter).to receive(:respond_to?).with(:notify).and_return(true)
         allow(reporter).to receive(:notify).and_raise(error)
         allow(logger).to receive(:error)
-
-        expect(logger).not_to receive(:debug)
+        allow(logger).to receive(:debug)
 
         described_class.notify("error")
+        expect(logger).not_to have_received(:debug)
       end
 
       it "handles error handler failure gracefully" do
@@ -513,9 +529,8 @@ RSpec.describe ActionReporter do
         allow(reporter).to receive(:respond_to?).with(:reset_context).and_return(true)
         allow(reporter).to receive(:reset_context).and_raise(StandardError.new("Reset failed"))
 
-        expect(logger).to receive(:error).with(/ActionReporter: .*#reset_context failed/)
-
         described_class.reset_context
+        expect(logger).to have_received(:error).with(/ActionReporter: .*#reset_context failed/)
       end
     end
 
@@ -534,9 +549,8 @@ RSpec.describe ActionReporter do
         allow(reporter).to receive(:respond_to?).with(:current_user=).and_return(true)
         allow(reporter).to receive(:current_user=).and_raise(StandardError.new("Set failed"))
 
-        expect(logger).to receive(:error).with(/ActionReporter: .*#current_user= failed/)
-
         described_class.current_user = user
+        expect(logger).to have_received(:error).with(/ActionReporter: .*#current_user= failed/)
       end
 
       it "handles current_request_uuid= errors" do
@@ -553,9 +567,8 @@ RSpec.describe ActionReporter do
         allow(reporter).to receive(:respond_to?).with(:current_request_uuid=).and_return(true)
         allow(reporter).to receive(:current_request_uuid=).and_raise(StandardError.new("Set failed"))
 
-        expect(logger).to receive(:error).with(/ActionReporter: .*#current_request_uuid= failed/)
-
         described_class.current_request_uuid = uuid
+        expect(logger).to have_received(:error).with(/ActionReporter: .*#current_request_uuid= failed/)
       end
 
       it "handles current_remote_addr= errors" do
@@ -572,9 +585,8 @@ RSpec.describe ActionReporter do
         allow(reporter).to receive(:respond_to?).with(:current_remote_addr=).and_return(true)
         allow(reporter).to receive(:current_remote_addr=).and_raise(StandardError.new("Set failed"))
 
-        expect(logger).to receive(:error).with(/ActionReporter: .*#current_remote_addr= failed/)
-
         described_class.current_remote_addr = addr
+        expect(logger).to have_received(:error).with(/ActionReporter: .*#current_remote_addr= failed/)
       end
     end
   end
@@ -585,12 +597,12 @@ RSpec.describe ActionReporter do
       described_class.reset_context
     end
 
-    it "isolates context between threads" do
+    it "isolates context between threads", :aggregate_failures do
       threads = []
       thread_results = Array.new(10)
 
       10.times do |i|
-        threads << Thread.new do
+        threads << Thread.new do # rubocop:disable ThreadSafety/NewThread -- intentional concurrency test
           thread_id = i
           described_class.current_user = "user_#{thread_id}"
           described_class.current_request_uuid = "uuid_#{thread_id}"
@@ -652,21 +664,24 @@ RSpec.describe ActionReporter do
         described_class.enabled_reporters = [reporter]
       end
 
-      it "sets transaction_id on reporters" do
+      it "sets transaction_id on reporters", :aggregate_failures do
         id = "txn-123"
         allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
-        expect(reporter).to receive(:respond_to?).with(:transaction_id=).and_return(true)
-        expect(reporter).to receive(:transaction_id=).with(id)
+        allow(reporter).to receive(:respond_to?).with(:transaction_id=).and_return(true)
+        allow(reporter).to receive(:transaction_id=)
         described_class.transaction_id = id
+        expect(reporter).to have_received(:respond_to?).with(:transaction_id=)
+        expect(reporter).to have_received(:transaction_id=).with(id)
       end
 
-      it "sets context with transaction_id" do
+      it "sets context with transaction_id", :aggregate_failures do
         id = "txn-123"
         allow(reporter).to receive(:respond_to?).with(:transaction_id=).and_return(true)
         allow(reporter).to receive(:transaction_id=)
-        allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
-        expect(described_class).to receive(:context).with(transaction_id: id)
+        allow(reporter).to receive(:respond_to?).with(:context).and_return(true)
+        allow(reporter).to receive(:context)
         described_class.transaction_id = id
+        expect(reporter).to have_received(:context).with(hash_including(transaction_id: id))
       end
     end
   end
@@ -694,21 +709,24 @@ RSpec.describe ActionReporter do
         described_class.enabled_reporters = [reporter]
       end
 
-      it "sets transaction_name on reporters" do
+      it "sets transaction_name on reporters", :aggregate_failures do
         name = "GET /api/users"
         allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
-        expect(reporter).to receive(:respond_to?).with(:transaction_name=).and_return(true)
-        expect(reporter).to receive(:transaction_name=).with(name)
+        allow(reporter).to receive(:respond_to?).with(:transaction_name=).and_return(true)
+        allow(reporter).to receive(:transaction_name=)
         described_class.transaction_name = name
+        expect(reporter).to have_received(:respond_to?).with(:transaction_name=)
+        expect(reporter).to have_received(:transaction_name=).with(name)
       end
 
-      it "sets context with transaction_name" do
+      it "sets context with transaction_name", :aggregate_failures do
         name = "GET /api/users"
         allow(reporter).to receive(:respond_to?).with(:transaction_name=).and_return(true)
         allow(reporter).to receive(:transaction_name=)
-        allow(reporter).to receive(:respond_to?).with(:context).and_return(false)
-        expect(described_class).to receive(:context).with(transaction_name: name)
+        allow(reporter).to receive(:respond_to?).with(:context).and_return(true)
+        allow(reporter).to receive(:context)
         described_class.transaction_name = name
+        expect(reporter).to have_received(:context).with(hash_including(transaction_name: name))
       end
     end
   end
@@ -730,14 +748,14 @@ RSpec.describe ActionReporter do
       expect(result).to eq("result")
     end
 
-    it "sets transaction name and ID within block" do
+    it "sets transaction name and ID within block", :aggregate_failures do
       described_class.transaction(name: "TestTransaction", id: "txn-123") do
         expect(described_class.transaction_name).to eq("TestTransaction")
         expect(described_class.transaction_id).to eq("txn-123")
       end
     end
 
-    it "restores previous transaction name after block" do
+    it "restores previous transaction name after block", :aggregate_failures do
       described_class.transaction_name = "PreviousName"
       described_class.transaction(name: "NewName") do
         expect(described_class.transaction_name).to eq("NewName")
@@ -745,7 +763,7 @@ RSpec.describe ActionReporter do
       expect(described_class.transaction_name).to eq("PreviousName")
     end
 
-    it "restores previous transaction ID after block" do
+    it "restores previous transaction ID after block", :aggregate_failures do
       described_class.transaction_id = "previous-id"
       described_class.transaction(id: "new-id") do
         expect(described_class.transaction_id).to eq("new-id")
@@ -753,7 +771,7 @@ RSpec.describe ActionReporter do
       expect(described_class.transaction_id).to eq("previous-id")
     end
 
-    it "restores previous values even when exception is raised" do
+    it "restores previous values even when exception is raised", :aggregate_failures do
       described_class.transaction_name = "PreviousName"
       described_class.transaction_id = "previous-id"
 
@@ -767,21 +785,22 @@ RSpec.describe ActionReporter do
       expect(described_class.transaction_id).to eq("previous-id")
     end
 
-    it "sets additional context" do
+    it "sets additional context", :aggregate_failures do
       reporter = double("Reporter")
       described_class.enabled_reporters = [reporter]
       allow(reporter).to receive(:respond_to?).with(:context).and_return(true)
       allow(reporter).to receive(:respond_to?).with(:transaction_name=).and_return(false)
       allow(reporter).to receive(:respond_to?).with(:transaction_id=).and_return(false)
+      allow(reporter).to receive(:context)
 
-      expect(reporter).to receive(:context).with(hash_including(transaction_name: "Test"))
-      expect(reporter).to receive(:context).with(hash_including(foo: "bar"))
-      expect(reporter).to receive(:context).with(hash_including(transaction_name: nil))
       described_class.transaction(name: "Test", foo: "bar") do
       end
+      expect(reporter).to have_received(:context).with(hash_including(transaction_name: "Test")).ordered
+      expect(reporter).to have_received(:context).with(hash_including(foo: "bar")).ordered
+      expect(reporter).to have_received(:context).with(hash_including(transaction_name: nil)).ordered
     end
 
-    it "does not restore when name/id are not provided" do
+    it "does not restore when name/id are not provided", :aggregate_failures do
       described_class.transaction_name = "PreviousName"
       described_class.transaction_id = "previous-id"
 
@@ -794,7 +813,7 @@ RSpec.describe ActionReporter do
       expect(described_class.transaction_id).to eq("previous-id")
     end
 
-    it "supports nested transactions" do
+    it "supports nested transactions", :aggregate_failures do
       described_class.transaction(name: "Outer") do
         expect(described_class.transaction_name).to eq("Outer")
         described_class.transaction(name: "Inner") do
@@ -806,8 +825,8 @@ RSpec.describe ActionReporter do
     end
   end
 
-  describe ".reset_context" do
-    it "resets transaction_id and transaction_name" do
+  describe ".reset_context transaction fields" do
+    it "resets transaction_id and transaction_name", :aggregate_failures do
       described_class.transaction_id = "txn-123"
       described_class.transaction_name = "TestTransaction"
       described_class.reset_context
@@ -832,9 +851,8 @@ RSpec.describe ActionReporter do
       allow(reporter).to receive(:respond_to?).with(:transaction_id=).and_return(true)
       allow(reporter).to receive(:transaction_id=).and_raise(StandardError.new("Set failed"))
 
-      expect(logger).to receive(:error).with(/ActionReporter: .*#transaction_id= failed/)
-
       described_class.transaction_id = id
+      expect(logger).to have_received(:error).with(/ActionReporter: .*#transaction_id= failed/)
     end
 
     it "handles transaction_name= errors" do
@@ -852,9 +870,8 @@ RSpec.describe ActionReporter do
       allow(reporter).to receive(:respond_to?).with(:transaction_name=).and_return(true)
       allow(reporter).to receive(:transaction_name=).and_raise(StandardError.new("Set failed"))
 
-      expect(logger).to receive(:error).with(/ActionReporter: .*#transaction_name= failed/)
-
       described_class.transaction_name = name
+      expect(logger).to have_received(:error).with(/ActionReporter: .*#transaction_name= failed/)
     end
   end
 end

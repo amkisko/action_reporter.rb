@@ -12,56 +12,62 @@ RSpec.describe ActionReporter::SentryReporter do
   end
 
   describe "#notify" do
-    subject(:notify) { instance.notify(error, context: context) }
-
     let(:error) { StandardError.new("Error") }
     let(:context) { {foo: "bar"} }
 
-    it "sends notification" do
-      expect(Sentry).to receive(:with_scope).and_call_original
-      expect(Sentry).to receive(:capture_exception).with(error).and_call_original
-      subject
+    it "sends notification", :aggregate_failures do
+      allow(Sentry).to receive(:with_scope).and_call_original
+      allow(Sentry).to receive(:capture_exception).and_call_original
+      instance.notify(error, context: context)
+      expect(Sentry).to have_received(:with_scope)
+      expect(Sentry).to have_received(:capture_exception).with(error)
     end
 
     context "when error is a string" do
       let(:error) { "Error" }
 
-      it "sends notification" do
-        expect(Sentry).to receive(:with_scope).and_call_original
-        expect(Sentry).to receive(:capture_message).with(error).and_call_original
-        subject
+      it "sends notification", :aggregate_failures do
+        allow(Sentry).to receive(:with_scope).and_call_original
+        allow(Sentry).to receive(:capture_message).and_call_original
+        instance.notify(error, context: context)
+        expect(Sentry).to have_received(:with_scope)
+        expect(Sentry).to have_received(:capture_message).with(error)
       end
     end
   end
 
   describe "#context" do
-    subject(:context) { instance.context(context_data) }
-
     let(:context_data) { {foo: "bar"} }
 
     it "sets context" do
-      expect(Sentry.get_current_scope).to receive(:set_context).with("context", context_data).and_call_original
-      subject
+      allow(Sentry.get_current_scope).to receive(:set_context).and_call_original
+      instance.context(context_data)
+      expect(Sentry.get_current_scope).to have_received(:set_context).with("context", context_data)
     end
 
     it "transforms context" do
-      expect(instance).to receive(:transform_context).with(context_data).and_call_original
-      subject
+      gid = double("GlobalId", to_s: "gid://app/User/1")
+      user = double("User", to_global_id: gid)
+      nested = {foo: "bar", user: user}
+      allow(Sentry.get_current_scope).to receive(:set_context).and_call_original
+      instance.context(nested)
+      expect(Sentry.get_current_scope).to have_received(:set_context).with(
+        "context",
+        foo: "bar",
+        user: "gid://app/User/1"
+      )
     end
   end
 
   describe "#reset_context" do
-    subject(:reset_context) { instance.reset_context }
-
     it "resets context" do
-      expect(Sentry.get_current_scope).to receive(:set_context).with("context", {}).and_call_original
-      subject
+      allow(Sentry.get_current_scope).to receive(:set_context).and_call_original
+      instance.reset_context
+      expect(Sentry.get_current_scope).to have_received(:set_context).with("context", {})
     end
   end
 
   describe "#current_user=" do
-    subject(:current_user=) { instance.current_user = user }
-
     after do
       ActionReporter.user_id_resolver = nil
     end
@@ -70,48 +76,51 @@ RSpec.describe ActionReporter::SentryReporter do
     let(:user) { double("User", to_global_id: sample_id) }
 
     it "sets user id" do
-      expect(Sentry).to receive(:set_user).with(id: sample_id.to_s).and_call_original
-      subject
+      allow(Sentry).to receive(:set_user).and_call_original
+      instance.current_user = user
+      expect(Sentry).to have_received(:set_user).with(id: sample_id.to_s)
     end
 
     context "when user is nil" do
       let(:user) { nil }
 
       it "sets empty user id" do
-        expect(Sentry).to receive(:set_user).with(id: "").and_call_original
-        subject
+        allow(Sentry).to receive(:set_user).and_call_original
+        instance.current_user = user
+        expect(Sentry).to have_received(:set_user).with(id: "")
       end
     end
 
     context "when ActionReporter.user_id_resolver is set" do
       it "uses resolved id" do
         ActionReporter.user_id_resolver = ->(_) { "custom-user-id" }
-        expect(Sentry).to receive(:set_user).with(id: "custom-user-id").and_call_original
+        allow(Sentry).to receive(:set_user).and_call_original
         instance.current_user = user
+        expect(Sentry).to have_received(:set_user).with(id: "custom-user-id")
       end
     end
   end
 
   describe "#transaction_id=" do
-    subject(:transaction_id=) { instance.transaction_id = transaction_id }
-
     let(:transaction_id) { "txn-123" }
 
     it "sets transaction_id tag" do
-      expect(Sentry).to receive(:set_tags).with(transaction_id: transaction_id).and_call_original
-      subject
+      allow(Sentry).to receive(:set_tags).and_call_original
+      instance.transaction_id = transaction_id
+      expect(Sentry).to have_received(:set_tags).with(transaction_id: transaction_id)
     end
   end
 
   describe "#transaction_name=" do
-    subject(:transaction_name=) { instance.transaction_name = transaction_name }
-
     let(:transaction_name) { "GET /api/users" }
 
-    it "sets transaction name on scope" do
-      expect(Sentry).to receive(:configure_scope).and_yield(Sentry.get_current_scope)
-      expect(Sentry.get_current_scope).to receive(:set_transaction_name).with(transaction_name).and_call_original
-      subject
+    it "sets transaction name on scope", :aggregate_failures do
+      scope = Sentry.get_current_scope
+      allow(Sentry).to receive(:configure_scope).and_yield(scope)
+      allow(scope).to receive(:set_transaction_name).and_call_original
+      instance.transaction_name = transaction_name
+      expect(Sentry).to have_received(:configure_scope)
+      expect(scope).to have_received(:set_transaction_name).with(transaction_name)
     end
   end
 end
