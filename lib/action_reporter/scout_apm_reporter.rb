@@ -13,8 +13,12 @@ module ActionReporter
       scoutapm_context_class.add(new_context)
     end
 
+    def current_remote_addr=(remote_addr)
+      scoutapm_context_class.add_user(ip: remote_addr)
+    end
+
     def current_user=(user)
-      scoutapm_context_class.add_user(user_global_id: user&.to_global_id&.to_s)
+      scoutapm_context_class.add_user(id: user&.to_global_id&.to_s)
     end
 
     def ignore_transaction!
