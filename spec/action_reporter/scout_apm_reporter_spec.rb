@@ -54,11 +54,33 @@ RSpec.describe ActionReporter::ScoutApmReporter do
   describe "#current_user=" do
     subject(:current_user=) { instance.current_user = user }
 
-    let(:user) { double("User", to_global_id: "gid://user/1") }
+    after do
+      ActionReporter.user_id_resolver = nil
+    end
+
+    let(:sample_id) { double("GlobalId", to_s: "user-global-id") }
+    let(:user) { double("User", to_global_id: sample_id) }
 
     it "sets current_user" do
-      expect(ScoutApm::Context).to receive(:add_user).with({user_global_id: user.to_global_id}).and_call_original
+      expect(ScoutApm::Context).to receive(:add_user).with(id: sample_id.to_s).and_call_original
       subject
+    end
+
+    context "when user is nil" do
+      let(:user) { nil }
+
+      it "adds empty id" do
+        expect(ScoutApm::Context).to receive(:add_user).with(id: "").and_call_original
+        subject
+      end
+    end
+
+    context "when ActionReporter.user_id_resolver is set" do
+      it "uses resolved id" do
+        ActionReporter.user_id_resolver = ->(_) { "custom-user-id" }
+        expect(ScoutApm::Context).to receive(:add_user).with(id: "custom-user-id").and_call_original
+        instance.current_user = user
+      end
     end
   end
 end

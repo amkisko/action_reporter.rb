@@ -80,4 +80,33 @@ RSpec.describe ActionReporter::Base do
       expect { instance.transaction_name = "TestTransaction" }.not_to raise_error
     end
   end
+
+  describe "#resolve_user_id" do
+    after do
+      ActionReporter.user_id_resolver = nil
+    end
+
+    context "when ActionReporter.user_id_resolver is set" do
+      it "returns the proc result" do
+        ActionReporter.user_id_resolver = ->(u) { "custom:#{u}" }
+        expect(instance.resolve_user_id("me")).to eq("custom:me")
+      end
+    end
+
+    context "when ActionReporter.user_id_resolver is nil" do
+      before do
+        require "rails/all"
+        GlobalID.app = "resolve-user-id-spec"
+      end
+
+      it "stringifies a GlobalID" do
+        gid = GlobalID.parse("gid://resolve-user-id-spec/User/42")
+        expect(instance.resolve_user_id(gid)).to eq("gid://resolve-user-id-spec/User/42")
+      end
+
+      it "stringifies other objects with to_s" do
+        expect(instance.resolve_user_id("plain")).to eq("plain")
+      end
+    end
+  end
 end

@@ -58,12 +58,33 @@ RSpec.describe ActionReporter::HoneybadgerReporter do
   describe "#current_user=" do
     subject(:current_user=) { instance.current_user = user }
 
+    after do
+      ActionReporter.user_id_resolver = nil
+    end
+
     let(:sample_id) { double("GlobalId", to_s: "user-global-id") }
     let(:user) { double("User", to_global_id: sample_id) }
 
-    it "sets user_global_id" do
-      expect(Honeybadger).to receive(:context).with(user_global_id: sample_id.to_s).and_call_original
+    it "sets user_id from resolve_user_id" do
+      expect(Honeybadger).to receive(:context).with(user_id: sample_id.to_s).and_call_original
       subject
+    end
+
+    context "when user is nil" do
+      let(:user) { nil }
+
+      it "sets empty user_id" do
+        expect(Honeybadger).to receive(:context).with(user_id: "").and_call_original
+        subject
+      end
+    end
+
+    context "when ActionReporter.user_id_resolver is set" do
+      it "uses resolved id" do
+        ActionReporter.user_id_resolver = ->(_) { "custom-user-id" }
+        expect(Honeybadger).to receive(:context).with(user_id: "custom-user-id").and_call_original
+        instance.current_user = user
+      end
     end
   end
 
