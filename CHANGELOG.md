@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 3.1.0 (2026-03-27)
+
+- Add `ActionReporter.user_id_resolver` for configuring how to resolve user IDs
+- Improve ScoutApmReporter current user setter to use `id` instead of `user_global_id`
+- Improve HoneybadgerReporter current user setter to use `user_id` instead of `user_global_id`
+- Improve SentryReporter current user setter to use `id` instead of `user_global_id` and fix `transaction_id` setter to use `transaction_id` instead of `transactionId`
+
 ## 3.0.0 (2026-03-13)
 
 - BREAKING: Remove backward-compat reporter loading
