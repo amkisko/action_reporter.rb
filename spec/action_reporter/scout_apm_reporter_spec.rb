@@ -42,8 +42,10 @@ RSpec.describe ActionReporter::ScoutApmReporter do
   end
 
   describe "#reset_context" do
-    it "does nothing" do
-      expect { instance.reset_context }.not_to raise_error
+    it "clears ScoutApm context" do
+      allow(ScoutApm::Context).to receive(:clear!)
+      instance.reset_context
+      expect(ScoutApm::Context).to have_received(:clear!)
     end
   end
 
