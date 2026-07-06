@@ -13,6 +13,10 @@ module ActionReporter
       scoutapm_context_class.add(new_context)
     end
 
+    def reset_context
+      scoutapm_context_class.clear! if scoutapm_context_class.respond_to?(:clear!)
+    end
+
     def current_remote_addr=(remote_addr)
       scoutapm_context_class.add_user(ip: remote_addr)
     end

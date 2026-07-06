@@ -37,6 +37,7 @@ module ActionReporter
   @logger = nil
   @error_handler = nil
   @user_id_resolver = nil
+  @no_reporters_warned = false
 
   def enabled_reporters=(reporters)
     @enabled_reporters = reporters || []
@@ -91,6 +92,8 @@ module ActionReporter
   end
 
   def notify(error, context: {})
+    warn_if_no_reporters(:notify)
+
     enabled_reporters.each do |reporter|
       next unless reporter.respond_to?(:notify)
 
@@ -104,6 +107,8 @@ module ActionReporter
 
   def context(args)
     raise ArgumentError, "context must be a Hash" unless args.is_a?(Hash)
+
+    warn_if_no_reporters(:context)
 
     enabled_reporters.each do |reporter|
       next unless reporter.respond_to?(:context)
@@ -254,6 +259,18 @@ module ActionReporter
     ensure
       self.transaction_name = previous_name if name
       self.transaction_id = previous_id if id
+      if context_options.any?
+        context(context_options.transform_values { nil })
+      end
     end
   end
+
+  def warn_if_no_reporters(method_name)
+    return if @no_reporters_warned
+    return unless enabled_reporters.empty?
+
+    @no_reporters_warned = true
+    warn "[action_reporter] #{method_name} called but enabled_reporters is empty"
+  end
+  private :warn_if_no_reporters
 end

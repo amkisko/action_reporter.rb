@@ -18,6 +18,16 @@ RSpec.describe ActionReporter do
       expect(enabled_reporters).to eq([])
     end
 
+    it "warns once when notify is called with no reporters", :aggregate_failures do
+      error = StandardError.new("test")
+      expect {
+        described_class.notify(error)
+      }.to output(/enabled_reporters is empty/).to_stderr
+      expect {
+        described_class.notify(error)
+      }.not_to output.to_stderr
+    end
+
     context "when Rails is defined" do
       let(:rails_reporter) { ActionReporter::RailsReporter.new }
 
@@ -798,6 +808,7 @@ RSpec.describe ActionReporter do
       expect(reporter).to have_received(:context).with(hash_including(transaction_name: "Test")).ordered
       expect(reporter).to have_received(:context).with(hash_including(foo: "bar")).ordered
       expect(reporter).to have_received(:context).with(hash_including(transaction_name: nil)).ordered
+      expect(reporter).to have_received(:context).with(hash_including(foo: nil)).ordered
     end
 
     it "does not restore when name/id are not provided", :aggregate_failures do
@@ -811,6 +822,18 @@ RSpec.describe ActionReporter do
 
       expect(described_class.transaction_name).to eq("PreviousName")
       expect(described_class.transaction_id).to eq("previous-id")
+    end
+
+    it "clears additional context after block", :aggregate_failures do
+      reporter = double("Reporter")
+      described_class.enabled_reporters = [reporter]
+      allow(reporter).to receive(:respond_to?).with(:context).and_return(true)
+      allow(reporter).to receive(:context)
+
+      described_class.transaction(foo: "bar") do
+      end
+      expect(reporter).to have_received(:context).with(hash_including(foo: "bar")).ordered
+      expect(reporter).to have_received(:context).with(hash_including(foo: nil)).ordered
     end
 
     it "supports nested transactions", :aggregate_failures do
