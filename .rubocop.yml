@@ -110,3 +110,26 @@ Rails/FindEach:
 Rails/UniqBeforePluck:
   Enabled: true
   Exclude: []
+
+Metrics/AbcSize:
+  Enabled: true
+  Max: 35
+  CountRepeatedAttributes: false
+Metrics/ModuleLength:
+  Enabled: true
+  CountAsOne: [array, hash, heredoc, method_call]
+  Max: 200
+Metrics/ClassLength:
+  Enabled: true
+  CountAsOne: [array, hash, heredoc, method_call]
+  Max: 200
+Metrics/PerceivedComplexity:
+  Enabled: true
+  Max: 18
+  Exclude:
+    - spec/performance/**/*
+Metrics/CyclomaticComplexity:
+  Enabled: true
+  Max: 18
+  Exclude:
+    - spec/performance/**/*

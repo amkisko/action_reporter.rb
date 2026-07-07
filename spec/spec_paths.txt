@@ -1,0 +1,14 @@
+spec/action_reporter/active_version_reporter_spec.rb
+spec/action_reporter/audited_reporter_spec.rb
+spec/action_reporter/base_spec.rb
+spec/action_reporter/current_spec.rb
+spec/action_reporter/custom_reporter_example_spec.rb
+spec/action_reporter/honeybadger_reporter_spec.rb
+spec/action_reporter/paper_trail_reporter_spec.rb
+spec/action_reporter/plugin_discovery_spec.rb
+spec/action_reporter/rails_reporter_spec.rb
+spec/action_reporter/scout_apm_reporter_spec.rb
+spec/action_reporter/sentry_reporter_spec.rb
+spec/action_reporter/utils_spec.rb
+spec/action_reporter_spec.rb
+spec/performance/action_reporter_benchmark_spec.rb

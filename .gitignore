@@ -14,6 +14,7 @@
 /coverage/*
 
 /spec/examples.txt
+/tmp/*
 
 .DS_Store
 .idea
@@ -23,3 +24,8 @@
 *.gem
 
 /gemfiles/*.lock
+
+# Cursor IDE config (may contain secrets)
+.cursor/mcp.json
+
+.pray/cache

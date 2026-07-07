@@ -1,0 +1,5 @@
+track_under:
+  - lib
+reject_patterns:
+  - "/lib/action_reporter/version.rb"
+minimum_line_percent: 85
