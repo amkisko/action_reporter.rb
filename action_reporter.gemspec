@@ -42,7 +42,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency "paper_trail", "~> 15"
   gem.add_development_dependency "active_version", "~> 1"
 
-  gem.add_development_dependency "bundler", "~> 2"
+  gem.add_development_dependency "bundler", ">= 2"
   gem.add_development_dependency "rspec", "~> 3"
   gem.add_development_dependency "polyrun", ">= 2.2.0"
   gem.add_development_dependency "prosopite", "~> 2.0"

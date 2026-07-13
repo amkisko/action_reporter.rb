@@ -21,7 +21,6 @@ jobs:
             ruby_version: "3.4"
           - gemfile: rails8ruby4
             ruby_version: "4.0"
-            bundler_version: "2.7.2"
           - gemfile: rails8truffleruby
             ruby_version: "truffleruby"
 
@@ -35,7 +34,6 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby_version }}
-        bundler: ${{ matrix.bundler_version || 'default' }}
         bundler-cache: true
 
     - name: Run tests
