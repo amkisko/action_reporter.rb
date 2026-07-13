@@ -31,7 +31,9 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = ">= 2.5.0"
   gem.require_path = "lib"
 
-  gem.add_runtime_dependency "rails", "> 5"
+  gem.add_runtime_dependency "activesupport", ">= 6.0"
+
+  gem.add_development_dependency "rails", "> 5"
 
   gem.add_development_dependency "audited", "~> 5"
   gem.add_development_dependency "honeybadger", "~> 5"
@@ -42,7 +44,8 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency "bundler", "~> 2"
   gem.add_development_dependency "rspec", "~> 3"
-  gem.add_development_dependency "polyrun", "~> 1.5.0"
+  gem.add_development_dependency "polyrun", ">= 2.2.0"
+  gem.add_development_dependency "prosopite", "~> 2.0"
   gem.add_development_dependency "rspec_junit_formatter", "~> 0.6"
   gem.add_development_dependency "webmock", "~> 3"
   gem.add_development_dependency "pry", "~> 0.15"

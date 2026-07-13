@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     action_reporter (3.1.0)
-      rails (> 5)
+      activesupport (>= 6.0)
 
 GEM
   remote: https://rubygems.org/
@@ -172,11 +172,12 @@ GEM
     parser (3.3.10.0)
       ast (~> 2.4.1)
       racc
-    polyrun (1.5.0)
+    polyrun (2.2.0)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
     prism (1.6.0)
+    prosopite (2.2.0)
     pry (0.15.2)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -371,8 +372,10 @@ DEPENDENCIES
   bundler (~> 2)
   honeybadger (~> 5)
   paper_trail (~> 15)
-  polyrun (~> 1.5.0)
+  polyrun (>= 2.2.0)
+  prosopite (~> 2.0)
   pry (~> 0.15)
+  rails (> 5)
   rbs (~> 3)
   rspec (~> 3)
   rspec_junit_formatter (~> 0.6)
