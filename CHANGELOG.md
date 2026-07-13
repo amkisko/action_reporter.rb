@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 3.2.0 (2026-07-13)
+
+- Improve context propagation across reporters
+  - Merge updates into existing reporter context instead of replacing prior keys on each call
+  - Remove context keys when an update passes `nil` for that key
+  - Apply shared merge semantics to `ActiveVersionReporter`, `AuditedReporter`, `HoneybadgerReporter`, `ScoutApmReporter`, and `SentryReporter`
+- Improve `SentryReporter` reset to clear the reporter context bucket from the Sentry scope
+- Remove unused `gem_spec` parameter from reporter `class_accessor` declarations (version checks were dropped in 2.0.1)
+- Improve plugin discovery warnings for reporter files and registrations that fail to load
+
 ## 3.1.0 (2026-03-27)
 
 - Add `ActionReporter.user_id_resolver` for configuring how to resolve user IDs

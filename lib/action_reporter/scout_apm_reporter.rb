@@ -1,7 +1,7 @@
 module ActionReporter
   class ScoutApmReporter < Base
-    class_accessor "ScoutApm::Error", gem_spec: "scout_apm (~> 5)"
-    class_accessor "ScoutApm::Context", gem_spec: "scout_apm (~> 5)"
+    class_accessor "ScoutApm::Error"
+    class_accessor "ScoutApm::Context"
 
     def notify(error, context: {})
       self.context(context)
@@ -9,8 +9,10 @@ module ActionReporter
     end
 
     def context(args)
-      new_context = transform_context(args)
-      scoutapm_context_class.add(new_context)
+      context_object = scoutapm_context_class.current
+      extra = context_object.instance_variable_get(:@extra).dup
+      # ScoutApm::Context.add ignores nil values and has no per-key delete API; replace @extra directly.
+      context_object.instance_variable_set(:@extra, merge_context_updates(extra, args))
     end
 
     def reset_context

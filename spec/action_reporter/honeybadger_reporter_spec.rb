@@ -24,19 +24,42 @@ RSpec.describe ActionReporter::HoneybadgerReporter do
   describe "#context" do
     let(:context_data) { {foo: "bar"} }
 
+    before do
+      Honeybadger.context.clear!
+    end
+
     it "sets context" do
-      allow(Honeybadger).to receive(:context).and_call_original
       instance.context(context_data)
-      expect(Honeybadger).to have_received(:context).with(context_data)
+      expect(Honeybadger.get_context).to eq(context_data)
+    end
+
+    it "merges with existing context" do
+      Honeybadger.context(baz: "qux")
+      instance.context(context_data)
+      expect(Honeybadger.get_context).to eq(baz: "qux", foo: "bar")
     end
 
     it "transforms context" do
       gid = double("GlobalId", to_s: "gid://app/User/1")
       user = double("User", to_global_id: gid)
       nested = {foo: "bar", user: user}
-      allow(Honeybadger).to receive(:context).and_call_original
       instance.context(nested)
-      expect(Honeybadger).to have_received(:context).with(foo: "bar", user: "gid://app/User/1")
+      expect(Honeybadger.get_context).to eq(foo: "bar", user: "gid://app/User/1")
+    end
+
+    it "removes keys when nil is passed" do
+      Honeybadger.context(foo: "bar", baz: "qux")
+      instance.context(foo: nil)
+      expect(Honeybadger.get_context).to eq(baz: "qux")
+    end
+
+    it "clears transaction context after block" do
+      ActionReporter.enabled_reporters = [instance]
+      ActionReporter.transaction(foo: "bar") {}
+      expect(Honeybadger.get_context).to be_nil
+    ensure
+      ActionReporter.enabled_reporters = []
+      Honeybadger.context.clear!
     end
   end
 

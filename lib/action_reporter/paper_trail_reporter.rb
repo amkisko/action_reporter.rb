@@ -1,6 +1,6 @@
 module ActionReporter
   class PaperTrailReporter < Base
-    class_accessor "PaperTrail", gem_spec: "paper_trail (~> 15)"
+    class_accessor "PaperTrail"
 
     def notify(*)
     end

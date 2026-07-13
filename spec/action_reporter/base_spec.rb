@@ -7,7 +7,7 @@ RSpec.describe ActionReporter::Base do
     let(:test_class) { Class.new(described_class) }
 
     before do
-      test_class.class_accessor "NonExistent", gem_spec: "nonexistent (~> 1.0)"
+      test_class.class_accessor "NonExistent"
     end
 
     it "raises error when class is not defined" do
@@ -66,6 +66,24 @@ RSpec.describe ActionReporter::Base do
         result = instance.transform_context(context)
         expect(result).to eq({user: "gid://user/1"})
       end
+    end
+  end
+
+  describe "#merge_context_updates" do
+    it "merges updates into current context" do
+      result = instance.merge_context_updates({existing: "value"}, {foo: "bar"})
+      expect(result).to eq(existing: "value", foo: "bar")
+    end
+
+    it "removes keys when update value is nil" do
+      result = instance.merge_context_updates({foo: "bar", baz: "qux"}, {foo: nil})
+      expect(result).to eq(baz: "qux")
+    end
+
+    it "transforms global ids in updates" do
+      user = double("User", to_global_id: double("GlobalID", to_s: "gid://user/1"))
+      result = instance.merge_context_updates({}, {user: user})
+      expect(result).to eq(user: "gid://user/1")
     end
   end
 

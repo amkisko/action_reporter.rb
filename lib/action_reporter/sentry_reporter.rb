@@ -1,6 +1,6 @@
 module ActionReporter
   class SentryReporter < Base
-    class_accessor "Sentry", gem_spec: "sentry-ruby (~> 5)"
+    class_accessor "Sentry"
 
     def notify(error, context: {})
       sentry_class.with_scope do |temp_scope|
@@ -15,11 +15,11 @@ module ActionReporter
     end
 
     def context(args)
-      sentry_class.get_current_scope.set_context("context", transform_context(args))
+      apply_reporter_context(merge_context_updates(current_reporter_context, args))
     end
 
     def reset_context
-      sentry_class.get_current_scope.set_context("context", {})
+      apply_reporter_context({})
     end
 
     def current_user=(user)
@@ -39,8 +39,20 @@ module ActionReporter
 
     private
 
-    def blank_user_id?(id)
-      id.nil? || (id.respond_to?(:empty?) && id.empty?)
+    def current_reporter_context
+      sentry_class.get_current_scope.contexts["context"] || {}
+    end
+
+    # sentry-ruby merges via set_context and cannot remove keys; replace the bucket via protected setter.
+    def apply_reporter_context(context_hash)
+      scope = sentry_class.get_current_scope
+      contexts = scope.contexts.dup
+      if context_hash.empty?
+        contexts.delete("context")
+      else
+        contexts["context"] = context_hash
+      end
+      scope.send(:contexts=, contexts)
     end
   end
 end

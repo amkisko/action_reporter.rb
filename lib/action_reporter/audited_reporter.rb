@@ -1,12 +1,14 @@
 module ActionReporter
   class AuditedReporter < Base
-    class_accessor "Audited", gem_spec: "audited (~> 5)"
+    class_accessor "Audited"
 
     def notify(*)
     end
 
     def context(args)
-      Audited.context = Audited.context.merge(args) if Audited.respond_to?(:context=)
+      return unless Audited.respond_to?(:context=)
+
+      Audited.context = merge_context_updates(Audited.context, args)
     end
 
     def reset_context

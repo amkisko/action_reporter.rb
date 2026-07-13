@@ -39,31 +39,39 @@ RSpec.describe ActionReporter::SentryReporter do
   describe "#context" do
     let(:context_data) { {foo: "bar"} }
 
-    it "sets context" do
-      allow(Sentry.get_current_scope).to receive(:set_context).and_call_original
+    it "merges context into the Sentry scope" do
       instance.context(context_data)
-      expect(Sentry.get_current_scope).to have_received(:set_context).with("context", context_data)
+      expect(Sentry.get_current_scope.contexts["context"]).to eq(foo: "bar")
+    end
+
+    it "accumulates keys across chained calls" do
+      instance.context(foo: "bar")
+      instance.context(baz: "qux")
+      expect(Sentry.get_current_scope.contexts["context"]).to eq(foo: "bar", baz: "qux")
     end
 
     it "transforms context" do
       gid = double("GlobalId", to_s: "gid://app/User/1")
       user = double("User", to_global_id: gid)
-      nested = {foo: "bar", user: user}
-      allow(Sentry.get_current_scope).to receive(:set_context).and_call_original
-      instance.context(nested)
-      expect(Sentry.get_current_scope).to have_received(:set_context).with(
-        "context",
+      instance.context(foo: "bar", user: user)
+      expect(Sentry.get_current_scope.contexts["context"]).to eq(
         foo: "bar",
         user: "gid://app/User/1"
       )
     end
+
+    it "removes keys when nil is passed" do
+      instance.context(foo: "bar", baz: "qux")
+      instance.context(foo: nil)
+      expect(Sentry.get_current_scope.contexts["context"]).to eq(baz: "qux")
+    end
   end
 
   describe "#reset_context" do
-    it "resets context" do
-      allow(Sentry.get_current_scope).to receive(:set_context).and_call_original
+    it "clears reporter context from the Sentry scope" do
+      instance.context(foo: "bar")
       instance.reset_context
-      expect(Sentry.get_current_scope).to have_received(:set_context).with("context", {})
+      expect(Sentry.get_current_scope.contexts).not_to have_key("context")
     end
   end
 

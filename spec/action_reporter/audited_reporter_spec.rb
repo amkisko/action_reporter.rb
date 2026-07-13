@@ -18,12 +18,37 @@ RSpec.describe ActionReporter::AuditedReporter do
     before do
       allow(Audited).to receive(:respond_to?).with(:context=).and_return(true)
       allow(Audited).to receive(:context).and_return({})
-      allow(Audited).to receive(:context=)
+      allow(Audited).to receive(:context=) do |value|
+        allow(Audited).to receive(:context).and_return(value)
+      end
     end
 
     it "merges context" do
+      allow(Audited).to receive(:context).and_return(existing: "value")
       instance.context(context_data)
-      expect(Audited).to have_received(:context=).with(context_data)
+      expect(Audited).to have_received(:context=).with(existing: "value", foo: "bar")
+    end
+
+    it "transforms global ids in context" do
+      gid = double("GlobalId", to_s: "gid://app/User/1")
+      user = double("User", to_global_id: gid)
+      allow(Audited).to receive(:context).and_return({})
+      instance.context(user: user)
+      expect(Audited).to have_received(:context=).with(user: "gid://app/User/1")
+    end
+
+    it "removes keys when nil is passed" do
+      allow(Audited).to receive(:context).and_return(foo: "bar", baz: "qux")
+      instance.context(foo: nil)
+      expect(Audited).to have_received(:context=).with(baz: "qux")
+    end
+
+    it "clears transaction context after block" do
+      ActionReporter.enabled_reporters = [instance]
+      ActionReporter.transaction(foo: "bar") {}
+      expect(Audited.context).to eq({})
+    ensure
+      ActionReporter.enabled_reporters = []
     end
 
     context "when Audited doesn't respond to context=" do

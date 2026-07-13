@@ -1,12 +1,14 @@
 module ActionReporter
   class ActiveVersionReporter < Base
-    class_accessor "ActiveVersion", gem_spec: "active_version (~> 1)"
+    class_accessor "ActiveVersion"
 
     def notify(*)
     end
 
     def context(args)
-      ActiveVersion.context = ActiveVersion.context.merge(args) if ActiveVersion.respond_to?(:context=)
+      return unless ActiveVersion.respond_to?(:context=)
+
+      ActiveVersion.context = merge_context_updates(ActiveVersion.context, args)
     end
 
     def reset_context

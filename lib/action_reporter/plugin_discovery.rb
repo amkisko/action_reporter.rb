@@ -55,7 +55,7 @@ module ActionReporter
             discovered_reporters << reporter_class if reporter_class
           rescue => e
             # Silently skip files that can't be loaded (non-blocking)
-            warn "ActionReporter: Failed to discover reporter from #{file}: #{e.message}" if logger
+            warn "ActionReporter: Failed to discover reporter from #{file}: #{e.message}"
           end
 
           self.discovered_reporters = discovered_reporters.freeze
@@ -74,7 +74,7 @@ module ActionReporter
           reporters << reporter_class if reporter_class
         rescue => e
           # Silently skip registered reporters that can't be loaded (non-blocking)
-          warn "ActionReporter: Failed to load registered reporter #{config[:class_name]}: #{e.message}" if logger
+          warn "ActionReporter: Failed to load registered reporter #{config[:class_name]}: #{e.message}"
         end
 
         reporters.uniq.freeze
@@ -125,7 +125,7 @@ module ActionReporter
           begin
             require config[:require_path]
           rescue LoadError => e
-            warn "ActionReporter: Could not require #{config[:require_path]}: #{e.message}" if logger
+            warn "ActionReporter: Could not require #{config[:require_path]}: #{e.message}"
           end
         end
 

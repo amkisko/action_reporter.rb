@@ -9,10 +9,14 @@ RSpec.describe ActionReporter::ScoutApmReporter do
     let(:error) { StandardError.new("error") }
     let(:context_data) { {foo: "bar"} }
 
+    before do
+      ScoutApm::Context.current.instance_variable_set(:@extra, {})
+    end
+
     it "sets context" do
-      allow(ScoutApm::Context).to receive(:add).and_call_original
       instance.notify(error, context: context_data)
-      expect(ScoutApm::Context).to have_received(:add).with(context_data)
+      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
+      expect(extra).to eq(context_data)
     end
 
     it "captures error" do
@@ -25,19 +29,46 @@ RSpec.describe ActionReporter::ScoutApmReporter do
   describe "#context" do
     let(:context_data) { {foo: "bar"} }
 
+    before do
+      ScoutApm::Context.current.instance_variable_set(:@extra, {})
+    end
+
     it "sets context" do
-      allow(ScoutApm::Context).to receive(:add).and_call_original
       instance.context(context_data)
-      expect(ScoutApm::Context).to have_received(:add).with(context_data)
+      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
+      expect(extra).to eq(context_data)
+    end
+
+    it "merges with existing context" do
+      ScoutApm::Context.current.instance_variable_set(:@extra, {baz: "qux"})
+      instance.context(context_data)
+      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
+      expect(extra).to eq(baz: "qux", foo: "bar")
     end
 
     it "transforms context" do
       gid = double("GlobalId", to_s: "gid://app/User/1")
       user = double("User", to_global_id: gid)
       nested = {foo: "bar", user: user}
-      allow(ScoutApm::Context).to receive(:add).and_call_original
       instance.context(nested)
-      expect(ScoutApm::Context).to have_received(:add).with(foo: "bar", user: "gid://app/User/1")
+      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
+      expect(extra).to eq(foo: "bar", user: "gid://app/User/1")
+    end
+
+    it "removes keys when nil is passed" do
+      ScoutApm::Context.current.instance_variable_set(:@extra, {foo: "bar", baz: "qux"})
+      instance.context(foo: nil)
+      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
+      expect(extra).to eq(baz: "qux")
+    end
+
+    it "clears transaction context after block" do
+      ActionReporter.enabled_reporters = [instance]
+      ActionReporter.transaction(foo: "bar") {}
+      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
+      expect(extra).to eq({})
+    ensure
+      ActionReporter.enabled_reporters = []
     end
   end
 

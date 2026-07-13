@@ -17,6 +17,7 @@ class FailingReporter < ActionReporter::Base
   end
 end
 
+# rubocop:disable RSpec/Output -- benchmark output is intentional for operators
 RSpec.describe ActionReporter, :performance do
   before do
     described_class.enabled_reporters = []
@@ -191,3 +192,4 @@ RSpec.describe ActionReporter, :performance do
     end
   end
 end
+# rubocop:enable RSpec/Output

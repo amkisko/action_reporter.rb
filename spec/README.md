@@ -21,7 +21,7 @@ bundle exec rspec spec/action_reporter_spec.rb
 bundle exec rspec spec/performance/
 ```
 
-See [POLYRUN.md](../POLYRUN.md) and `polyrun.yml`. `make test` runs `hooks.before_suite` before specs.
+See `polyrun.yml`. `make test` runs `make lint` before specs.
 
 ## Layout
 
@@ -32,5 +32,5 @@ See [POLYRUN.md](../POLYRUN.md) and `polyrun.yml`. `make test` runs `hooks.befor
 
 - Test observable reporting outcomes, not internal dispatch details.
 - Mock only external boundaries (Sentry, logging backends, time).
-- Add or update specs before bugfixes; run `make lint && make test` before a PR.
+- Add or update specs before bugfixes; run `make test` before a PR.
 - Coverage threshold: `config/polyrun_coverage.yml` when `POLYRUN_COVERAGE=1`.

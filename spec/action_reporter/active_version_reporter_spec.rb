@@ -20,8 +20,31 @@ RSpec.describe ActionReporter::ActiveVersionReporter do
     end
 
     it "merges context" do
+      ActiveVersion.context = {existing: "value"}
       instance.context(context_data)
-      expect(ActiveVersion.context).to eq(context_data)
+      expect(ActiveVersion.context).to eq(existing: "value", foo: "bar")
+    end
+
+    it "transforms global ids in context" do
+      gid = double("GlobalId", to_s: "gid://app/User/1")
+      user = double("User", to_global_id: gid)
+      ActiveVersion.context = {}
+      instance.context(user: user)
+      expect(ActiveVersion.context).to eq(user: "gid://app/User/1")
+    end
+
+    it "removes keys when nil is passed" do
+      ActiveVersion.context = {foo: "bar", baz: "qux"}
+      instance.context(foo: nil)
+      expect(ActiveVersion.context).to eq(baz: "qux")
+    end
+
+    it "clears transaction context after block" do
+      ActionReporter.enabled_reporters = [instance]
+      ActionReporter.transaction(foo: "bar") {}
+      expect(ActiveVersion.context).to eq({})
+    ensure
+      ActionReporter.enabled_reporters = []
     end
   end
 

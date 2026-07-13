@@ -2,7 +2,7 @@ require_relative "error"
 
 module ActionReporter
   class Base
-    def self.class_accessor(class_name, gem_spec: nil)
+    def self.class_accessor(class_name)
       method_name = class_name.gsub("::", "_").downcase + "_class"
       define_method(method_name) do
         raise ActionReporter::Error.new("#{class_name} is not defined") unless Object.const_defined?(class_name)
@@ -22,6 +22,14 @@ module ActionReporter
           value
         end
       end
+    end
+
+    def merge_context_updates(current, updates)
+      transformed = transform_context(updates)
+      keys_to_remove = transformed.each_with_object([]) do |(key, value), removals|
+        removals << key if value.nil?
+      end
+      current.merge(transformed).except(*keys_to_remove)
     end
 
     def resolve_check_in_id(identifier)

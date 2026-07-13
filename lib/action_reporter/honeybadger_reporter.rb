@@ -1,6 +1,6 @@
 module ActionReporter
   class HoneybadgerReporter < Base
-    class_accessor "Honeybadger", gem_spec: "honeybadger (~> 5)"
+    class_accessor "Honeybadger"
 
     def notify(error, context: {})
       new_context = transform_context(context)
@@ -8,8 +8,10 @@ module ActionReporter
     end
 
     def context(args)
-      new_context = transform_context(args)
-      honeybadger_class.context(new_context)
+      current = honeybadger_class.get_context || {}
+      merged = merge_context_updates(current, args)
+      honeybadger_class.context.clear!
+      honeybadger_class.context(merged) unless merged.empty?
     end
 
     def reset_context
