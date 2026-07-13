@@ -9,6 +9,7 @@ POLYRUN_MERGE_FORMATS = nil
 
 require "fileutils"
 require_relative "../lib/release_version_check"
+require_relative "../lib/release_appraisal_install"
 
 FileUtils.mkdir_p("tmp")
 
@@ -29,7 +30,7 @@ gemspec = Dir.glob("*.gemspec").fetch(0)
 gem_name = File.basename(gemspec, ".gemspec")
 
 execute_command("bundle install")
-execute_command("bundle exec appraisal install")
+ReleaseAppraisalInstall.install(execute_command: method(:execute_command))
 execute_command("ruby usr/bin/license_audit.rb") if File.exist?("usr/bin/license_audit.rb")
 execute_command("bundle exec rubocop -a 2>&1 | tee tmp/rubocop.log")
 execute_command("bundle exec rbs validate")
