@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.2.1 (2026-07-13)
+
+- Fix check-in identifier errors to raise `ActionReporter::Error` instead of stack overflow when an identifier cannot be stringified
+
 ## 3.2.0 (2026-07-13)
 
 - Improve context propagation across reporters

@@ -38,7 +38,9 @@ module ActionReporter
       elsif identifier.respond_to?(:to_s)
         identifier.to_s
       else
-        raise ActionReporter::Error.new("Unknown check-in identifier: #{identifier.inspect}")
+        raise ActionReporter::Error.new(
+          "Unknown check-in identifier (#{identifier.class}, object_id=#{identifier.object_id})"
+        )
       end
     end
 
