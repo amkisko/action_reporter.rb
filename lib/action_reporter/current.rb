@@ -1,4 +1,3 @@
-require "active_support/isolated_execution_state"
 require_relative "error"
 
 module ActionReporter
