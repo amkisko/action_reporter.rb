@@ -1,6 +1,6 @@
 # action_reporter
 
-[![Gem Version](https://badge.fury.io/rb/action_reporter.svg?v=3.0.0)](https://badge.fury.io/rb/action_reporter) [![Test Status](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml/badge.svg)](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/amkisko/action_reporter.rb/graph/badge.svg?token=JCV2A7NWTE)](https://codecov.io/gh/amkisko/action_reporter.rb) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=amkisko_action_reporter.rb&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=amkisko_action_reporter.rb)
+[![Gem Version](https://badge.fury.io/rb/action_reporter.svg?v=3.0.0)](https://badge.fury.io/rb/action_reporter) [![Test Status](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml/badge.svg)](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/amkisko/action_reporter.rb/graph/badge.svg?token=JCV2A7NWTE)](https://app.codecov.io/github/amkisko/action_reporter.rb) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=amkisko_action_reporter.rb&metric=alert_status)](https://sonarcloud.io/project/overview?id=amkisko_action_reporter.rb)
 
 Ruby wrapper for multiple reporting services.
 
@@ -162,6 +162,19 @@ gem build action_reporter.gemspec
 gem push action_reporter-*.gem
 ```
 
+
+## Links
+
+- [GitHub](https://github.com/amkisko/action_reporter.rb)
+- [GitLab](https://gitlab.com/amkisko/action_reporter.rb)
+- [RubyGems](https://rubygems.org/gems/action_reporter)
+- [Versions Atom](https://rubygems.org/gems/action_reporter/versions.atom) (feed id `5814531496962`)
+- [libraries.io](https://libraries.io/rubygems/action_reporter)
+- [Deps.dev](https://deps.dev/rubygems/action_reporter)
+- [SonarCloud](https://sonarcloud.io/project/overview?id=amkisko_action_reporter.rb)
+- [Snyk](https://snyk.io/test/github/amkisko/action_reporter.rb)
+- [Codecov](https://app.codecov.io/github/amkisko/action_reporter.rb)
+- [OpenSSF Scorecard](https://scorecard.dev/viewer/?uri=github.com/amkisko/action_reporter.rb)
 
 ## License
 

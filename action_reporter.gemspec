@@ -28,10 +28,10 @@ Gem::Specification.new do |gem|
   # s.bindir      = "bin"
   # s.executables = ["action_reporter"]
 
-  gem.required_ruby_version = ">= 2.5.0"
+  gem.required_ruby_version = ">= 3.4"
   gem.require_path = "lib"
 
-  gem.add_runtime_dependency "activesupport", ">= 6.0"
+  gem.add_runtime_dependency "activesupport", ">= 7.0"
 
   gem.add_development_dependency "rails", "> 5"
 
