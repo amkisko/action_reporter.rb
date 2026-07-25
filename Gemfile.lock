@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     action_reporter (3.2.1)
-      activesupport (>= 6.0)
+      activesupport (>= 7.0)
 
 GEM
   remote: https://rubygems.org/
