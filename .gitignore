@@ -26,4 +26,4 @@
 # Cursor IDE config (may contain secrets)
 .cursor/mcp.json
 
-.pray/cache
+.pray
