@@ -133,7 +133,7 @@ end
 ```bash
 bundle install
 bundle exec appraisal generate
-bundle exec rspec
+bundle exec polyrun parallel-rspec --workers 5 --merge-failures
 bin/appraisals
 bundle exec standardrb --fix
 ```
