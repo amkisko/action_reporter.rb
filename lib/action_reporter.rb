@@ -128,6 +128,8 @@ module ActionReporter
     Current.transaction_id = nil
     Current.transaction_name = nil
 
+    @no_reporters_warned = false
+
     enabled_reporters.each do |reporter|
       next unless reporter.respond_to?(:reset_context)
 
