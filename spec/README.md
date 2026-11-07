@@ -25,8 +25,8 @@ See `polyrun.yml`. `make test` runs `make lint` before specs.
 
 ## Layout
 
-- `spec/` — unit specs for reporter configuration and instrumentation
-- `spec/performance/` — optional benchmark-style specs (metrics cops excluded in RuboCop)
+- `spec/` - unit specs for reporter configuration and instrumentation
+- `spec/performance/` - optional benchmark-style specs (metrics cops excluded in RuboCop)
 
 ## Guidelines
 

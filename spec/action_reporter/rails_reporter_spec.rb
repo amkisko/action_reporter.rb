@@ -41,7 +41,7 @@ RSpec.describe ActionReporter::RailsReporter do
     context "when context contains current_user" do
       let(:context) { {foo: "bar", current_user: "user"} }
 
-      it "returns context without current_user" do
+      it "returns context including current_user" do
         expect(transformed_context).to eq({current_user: "user", foo: "bar"})
       end
     end

@@ -20,6 +20,10 @@ module ActionReporter
 
     def reset_context
       apply_reporter_context({})
+      scope = sentry_class.get_current_scope
+      scope.set_user({})
+      scope.tags.delete(:transaction_id)
+      scope.set_transaction_name(nil)
     end
 
     def current_user=(user)
@@ -28,7 +32,11 @@ module ActionReporter
     end
 
     def transaction_id=(transaction_id)
-      sentry_class.set_tags(transaction_id: transaction_id)
+      if transaction_id.nil?
+        sentry_class.get_current_scope.tags.delete(:transaction_id)
+      else
+        sentry_class.set_tags(transaction_id: transaction_id)
+      end
     end
 
     def transaction_name=(transaction_name)

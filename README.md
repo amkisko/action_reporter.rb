@@ -1,6 +1,6 @@
 # action_reporter
 
-[![Gem Version](https://badge.fury.io/rb/action_reporter.svg?v=3.0.0)](https://badge.fury.io/rb/action_reporter) [![Test Status](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml/badge.svg)](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/amkisko/action_reporter.rb/graph/badge.svg?token=JCV2A7NWTE)](https://app.codecov.io/github/amkisko/action_reporter.rb) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=amkisko_action_reporter.rb&metric=alert_status)](https://sonarcloud.io/project/overview?id=amkisko_action_reporter.rb)
+[![Gem Version](https://badge.fury.io/rb/action_reporter.svg?v=3.2.2)](https://badge.fury.io/rb/action_reporter) [![Test Status](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml/badge.svg)](https://github.com/amkisko/action_reporter.rb/actions/workflows/test.yml) [![codecov](https://codecov.io/gh/amkisko/action_reporter.rb/graph/badge.svg?token=JCV2A7NWTE)](https://app.codecov.io/github/amkisko/action_reporter.rb) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=amkisko_action_reporter.rb&metric=alert_status)](https://sonarcloud.io/project/overview?id=amkisko_action_reporter.rb)
 
 Ruby wrapper for multiple reporting services.
 

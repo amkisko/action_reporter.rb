@@ -12,3 +12,4 @@ spec/action_reporter/sentry_reporter_spec.rb
 spec/action_reporter/utils_spec.rb
 spec/action_reporter_spec.rb
 spec/performance/action_reporter_benchmark_spec.rb
+spec/release_version_check_spec.rb

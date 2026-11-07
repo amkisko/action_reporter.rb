@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 3.2.2 (2026-11-03)
+
+- Clear Sentry user and transaction identifiers when resetting request context.
+- Delete the Sentry `transaction_id` tag when the setter receives `nil`.
+- Clear ScoutApm user and extra context when resetting request context.
+- Restore ScoutApm extra context after `notify` so per-call context does not linger.
+- Call `ScoutApm::Transaction.ignore!` from `ScoutApmReporter#ignore_transaction!`.
+- Cancel release preparation when confirmation input is closed.
+- Require a CHANGELOG version heading before gem push.
+- Run the test workflow on pull requests with read-only contents permission.
+
 ## 3.2.1 (2026-07-13)
 
 - Fix check-in identifier errors to raise `ActionReporter::Error` instead of stack overflow when an identifier cannot be stringified

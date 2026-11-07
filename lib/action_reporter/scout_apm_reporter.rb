@@ -2,10 +2,17 @@ module ActionReporter
   class ScoutApmReporter < Base
     class_accessor "ScoutApm::Error"
     class_accessor "ScoutApm::Context"
+    class_accessor "ScoutApm::Transaction"
 
     def notify(error, context: {})
-      self.context(context)
-      scoutapm_error_class.capture(error)
+      context_object = scoutapm_context_class.current
+      previous_extra = context_object.instance_variable_get(:@extra).dup
+      begin
+        self.context(context)
+        scoutapm_error_class.capture(error)
+      ensure
+        context_object.instance_variable_set(:@extra, previous_extra)
+      end
     end
 
     def context(args)
@@ -16,7 +23,10 @@ module ActionReporter
     end
 
     def reset_context
-      scoutapm_context_class.clear! if scoutapm_context_class.respond_to?(:clear!)
+      context_object = scoutapm_context_class.current
+      # ScoutApm::Context no longer exposes clear!; wipe request-local user and extra hashes.
+      context_object.instance_variable_set(:@extra, {})
+      context_object.instance_variable_set(:@user, {})
     end
 
     def current_remote_addr=(remote_addr)
@@ -29,7 +39,7 @@ module ActionReporter
     end
 
     def ignore_transaction!
-      scoutapm_context_class.ignore_transaction!
+      scoutapm_transaction_class.ignore!
     end
   end
 end

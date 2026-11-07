@@ -5,45 +5,52 @@ require "action_reporter/scout_apm_reporter"
 RSpec.describe ActionReporter::ScoutApmReporter do
   subject(:instance) { described_class.new }
 
+  def scout_context
+    ScoutApm::Context.current
+  end
+
+  def scout_extra
+    scout_context.instance_variable_get(:@extra)
+  end
+
+  def scout_user
+    scout_context.instance_variable_get(:@user)
+  end
+
+  before do
+    scout_context.instance_variable_set(:@extra, {})
+    scout_context.instance_variable_set(:@user, {})
+  end
+
   describe "#notify" do
     let(:error) { StandardError.new("error") }
     let(:context_data) { {foo: "bar"} }
 
-    before do
-      ScoutApm::Context.current.instance_variable_set(:@extra, {})
-    end
+    it "captures error with notify context without retaining it", :aggregate_failures do
+      scout_context.instance_variable_set(:@extra, {kept: "yes"})
+      allow(ScoutApm::Error).to receive(:capture) do
+        expect(scout_extra).to eq(kept: "yes", foo: "bar")
+      end
 
-    it "sets context" do
       instance.notify(error, context: context_data)
-      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
-      expect(extra).to eq(context_data)
-    end
 
-    it "captures error" do
-      allow(ScoutApm::Error).to receive(:capture).and_call_original
-      instance.notify(error, context: context_data)
       expect(ScoutApm::Error).to have_received(:capture).with(error)
+      expect(scout_extra).to eq(kept: "yes")
     end
   end
 
   describe "#context" do
     let(:context_data) { {foo: "bar"} }
 
-    before do
-      ScoutApm::Context.current.instance_variable_set(:@extra, {})
-    end
-
     it "sets context" do
       instance.context(context_data)
-      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
-      expect(extra).to eq(context_data)
+      expect(scout_extra).to eq(context_data)
     end
 
     it "merges with existing context" do
-      ScoutApm::Context.current.instance_variable_set(:@extra, {baz: "qux"})
+      scout_context.instance_variable_set(:@extra, {baz: "qux"})
       instance.context(context_data)
-      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
-      expect(extra).to eq(baz: "qux", foo: "bar")
+      expect(scout_extra).to eq(baz: "qux", foo: "bar")
     end
 
     it "transforms context" do
@@ -51,40 +58,42 @@ RSpec.describe ActionReporter::ScoutApmReporter do
       user = double("User", to_global_id: gid)
       nested = {foo: "bar", user: user}
       instance.context(nested)
-      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
-      expect(extra).to eq(foo: "bar", user: "gid://app/User/1")
+      expect(scout_extra).to eq(foo: "bar", user: "gid://app/User/1")
     end
 
     it "removes keys when nil is passed" do
-      ScoutApm::Context.current.instance_variable_set(:@extra, {foo: "bar", baz: "qux"})
+      scout_context.instance_variable_set(:@extra, {foo: "bar", baz: "qux"})
       instance.context(foo: nil)
-      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
-      expect(extra).to eq(baz: "qux")
+      expect(scout_extra).to eq(baz: "qux")
     end
 
     it "clears transaction context after block" do
       ActionReporter.enabled_reporters = [instance]
       ActionReporter.transaction(foo: "bar") {}
-      extra = ScoutApm::Context.current.instance_variable_get(:@extra)
-      expect(extra).to eq({})
+      expect(scout_extra).to eq({})
     ensure
       ActionReporter.enabled_reporters = []
     end
   end
 
   describe "#reset_context" do
-    it "clears ScoutApm context" do
-      allow(ScoutApm::Context).to receive(:clear!)
+    it "clears user and extra context while leaving the request object", :aggregate_failures do
+      instance.current_user = "previous-user"
+      instance.current_remote_addr = "127.0.0.1"
+      instance.context(foo: "bar")
+
       instance.reset_context
-      expect(ScoutApm::Context).to have_received(:clear!)
+
+      expect(scout_user).to eq({})
+      expect(scout_extra).to eq({})
     end
   end
 
   describe "#ignore_transaction!" do
-    it "calls ignore_transaction! on ScoutApm::Context" do
-      allow(ScoutApm::Context).to receive(:ignore_transaction!)
+    it "ignores the current Scout transaction" do
+      allow(ScoutApm::Transaction).to receive(:ignore!)
       instance.ignore_transaction!
-      expect(ScoutApm::Context).to have_received(:ignore_transaction!)
+      expect(ScoutApm::Transaction).to have_received(:ignore!)
     end
   end
 

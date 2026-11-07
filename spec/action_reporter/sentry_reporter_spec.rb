@@ -75,6 +75,22 @@ RSpec.describe ActionReporter::SentryReporter do
     end
   end
 
+  describe "request context reset" do
+    it "clears identity and transaction state while retaining unrelated tags", :aggregate_failures do
+      instance.current_user = "previous-user"
+      instance.transaction_id = "previous-transaction"
+      instance.transaction_name = "previous-request"
+      Sentry.set_tags(application: "test")
+
+      instance.reset_context
+
+      scope = Sentry.get_current_scope
+      expect(scope.user).to eq({})
+      expect(scope.tags).to eq(application: "test")
+      expect(scope.transaction_name).to be_nil
+    end
+  end
+
   describe "#current_user=" do
     after do
       ActionReporter.user_id_resolver = nil
@@ -116,6 +132,12 @@ RSpec.describe ActionReporter::SentryReporter do
       allow(Sentry).to receive(:set_tags).and_call_original
       instance.transaction_id = transaction_id
       expect(Sentry).to have_received(:set_tags).with(transaction_id: transaction_id)
+    end
+
+    it "deletes the transaction_id tag when set to nil" do
+      instance.transaction_id = transaction_id
+      instance.transaction_id = nil
+      expect(Sentry.get_current_scope.tags).not_to have_key(:transaction_id)
     end
   end
 

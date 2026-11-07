@@ -44,7 +44,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency "bundler", ">= 2"
   gem.add_development_dependency "rspec", "~> 3"
-  gem.add_development_dependency "polyrun", ">= 2.2.0"
+  gem.add_development_dependency "polyrun", ">= 2.2.9"
   gem.add_development_dependency "prosopite", "~> 2.0"
   gem.add_development_dependency "webmock", "~> 3"
   gem.add_development_dependency "pry", "~> 0.15"
