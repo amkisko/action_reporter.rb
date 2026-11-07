@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 3.2.2 (2026-11-03)
+## 3.2.2 (2026-11-07)
 
 - Clear Sentry user and transaction identifiers when resetting request context.
 - Delete the Sentry `transaction_id` tag when the setter receives `nil`.

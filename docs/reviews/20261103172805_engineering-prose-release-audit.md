@@ -18,7 +18,7 @@ Ranked fixes applied:
 2. Restore ScoutApm `@extra` after `notify` (high confidence, observed).
 3. Delegate `ignore_transaction!` to `ScoutApm::Transaction.ignore!` (high confidence, observed).
 4. Delete Sentry `transaction_id` tag on nil setter (medium confidence, observed).
-5. Changelog heading and confirmation specs; CHANGELOG dated 2026-11-03.
+5. Changelog heading and confirmation specs; CHANGELOG dated 2026-11-07.
 6. ASCII and badge pass on `spec/README.md` and README fury version query.
 
 Deferred (documented in the issue): nil-user empty-string binds, private Scout/Sentry API coupling, unused error constants.
@@ -40,5 +40,6 @@ Commit, then `make release`.
 ## Source
 
 - docs/issues/20261103172805_engineering-prose-release-audit.md
-- CHANGELOG.md section 3.2.2 (2026-11-03)
+- CHANGELOG.md section 3.2.2 (2026-11-07)
+- docs/changelogs/20261107113305_release-3-2-2-cut.md
 - Prior pass: docs/issues/20261028093000_engineering-release-audit.md

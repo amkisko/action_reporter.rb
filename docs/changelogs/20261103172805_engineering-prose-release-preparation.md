@@ -14,7 +14,7 @@ Update the version source, changelog date, path-package lock entries, ScoutApm a
 
 ## Next
 
-Review and commit before release. No tag, push, or publication was performed in the audit session.
+Superseded by docs/changelogs/20261107113305_release-3-2-2-cut.md for the publish cut.
 
 ## Source
 

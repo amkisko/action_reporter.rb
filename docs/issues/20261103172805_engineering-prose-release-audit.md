@@ -6,7 +6,7 @@ Andrei Makarov (@amkisko)
 
 ## Decisions
 
-- Keep version 3.2.2. Fold ScoutApm isolation fixes and release-gate coverage into the unpublished cut and date the product changelog 2026-11-03.
+- Keep version 3.2.2. Fold ScoutApm isolation fixes and release-gate coverage into the unpublished cut and date the product changelog 2026-11-07.
 - Treat ScoutApm `reset_context` like the Sentry isolation boundary: clear `@user` and `@extra` on the request-local context object.
 - Keep notify context ephemeral for ScoutApm by restoring prior `@extra` after capture.
 - Map `ignore_transaction!` to `ScoutApm::Transaction.ignore!`.
@@ -24,7 +24,7 @@ Ranked fixes applied:
 2. ScoutApm `notify` restores prior extra context after capture (high, observed).
 3. ScoutApm `ignore_transaction!` calls `ScoutApm::Transaction.ignore!` (medium, observed).
 4. Sentry `transaction_id=` deletes the tag on `nil` (low, observed).
-5. Release changelog heading and confirmation specs; CHANGELOG dated 2026-11-03 (medium, observed).
+5. Release changelog heading and confirmation specs; CHANGELOG dated 2026-11-07 (medium, observed).
 6. ASCII punctuation in `spec/README.md`; README gem badge version (house prose).
 
 Deferred:
@@ -43,5 +43,6 @@ Checks: rubocop clean on touched files; rspec 214 examples, 0 failures; coverage
 ## Source
 
 docs/reviews/20261103172805_engineering-prose-release-audit.md
-CHANGELOG.md section 3.2.2 (2026-11-03)
+CHANGELOG.md section 3.2.2 (2026-11-07)
+docs/changelogs/20261107113305_release-3-2-2-cut.md
 docs/issues/20261028093000_engineering-release-audit.md
